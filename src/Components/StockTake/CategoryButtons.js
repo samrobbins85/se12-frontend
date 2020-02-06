@@ -24,7 +24,6 @@ class CategoryButtons extends Component {
 	}
 
 
-
 	componentWillUpdate(nextProps, nextState) {
 
 	}
@@ -37,10 +36,11 @@ class CategoryButtons extends Component {
 	componentWillUnmount() {
 
 	}
-	handleClick = (id)=>{
 
-		this.setState({selected:id});
-		this.props.parentCallback({id:id});
+	handleClick = (id) => {
+
+		this.setState({selected: id});
+		this.props.parentCallback({id: id});
 
 	};
 
@@ -51,7 +51,7 @@ class CategoryButtons extends Component {
 				<Col>
 					<Row style={{paddingTop: '10px'}}>
 						{this.props.categories.map(z => {
-							return <Box align="center" height="60px" width="130px">
+							return <Box align="center" height="90px" width="130px" style={{padding: '10px'}}>
 								<Button label={z} fill onClick={() => {
 									this.handleClick(z);
 								}}/>
