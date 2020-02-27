@@ -3,9 +3,7 @@ import {AccordionPanel, Box, Accordion, Text, Stack, Meter, Grommet} from "gromm
 import {Alert, Col, Container, Jumbotron, Row} from "react-bootstrap";
 import {DocumentExcel, MailOption} from "grommet-icons";
 import {grommet} from "grommet/themes";
-class Orders extends Component {
-	render() {
-		return (
+const Orders = () => (
 			<Container>
 				<Row>
 					<Col md={9}>
@@ -249,7 +247,6 @@ class Orders extends Component {
 				</Row>
 			</Container>
 		);
-	}
-}
+
 
 export default Orders;

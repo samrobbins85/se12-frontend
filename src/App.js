@@ -1,17 +1,29 @@
-import React, { Component } from 'react';
+import React from "react";
+import { Router, Route, Switch } from "react-router-dom";
+import { Container } from "reactstrap";
 import {Box, Grommet, ResponsiveContext,} from 'grommet';
-import './css/react-sidenav.css';
-import CustomSideBar from './Components/CustomSideBar'
-import TopBar from './Components/TopBar'
-import { BrowserRouter as Router, Route } from 'react-router-dom';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import './auth0.css';
+import PrivateRoute from "./components/PrivateRoute";
+import Loading from "./components/Loading";
+import NavBar from "./components/NavBar";
+import Footer from "./components/Footer";
+import Home from "./views/Home";
+import Profile from "./views/Profile";
+import Dashboard from "./views/Dashboard";
+import Orders from "./views/Orders";
+import Designer from "./views/Designer";
+import Reports from "./views/Reports";
+import StockTake from "./views/StockTake/StockTake";
 
-import Account from './Components/Account/Account.js'
-import Designer from './Components/Designer/Designer.js'
-import Home from './Components/Home/Home.js'
-import Orders from './Components/Orders/Orders.js'
-import Reports from './Components/Reports/Reports.js'
-import StockTake from './Components/StockTake/StockTake.js'
+import { useAuth0 } from "./react-auth0-spa";
+import history from "./utils/history";
+
+// styles
+import "./App.css";
+
+// fontawesome
+import initFontAwesome from "./utils/initFontAwesome";
+initFontAwesome();
 
 const theme = {
   global: {
@@ -28,46 +40,34 @@ const theme = {
   },
 };
 
-class App extends Component {
+const App = () => {
+  const { loading } = useAuth0();
 
-  render() {
-    return (
-      <Router>
-        <Grommet theme={theme} full>
-          <link
-              rel="stylesheet"
-              href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-              integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
-              crossOrigin="anonymous"
-          />
-          <ResponsiveContext.Consumer>
-            {size => (
-              <Box fill>
-
-
-                <CustomSideBar/>
-
-                <TopBar/>
-
-                <Box direction='row' flex overflow={{ horizontal: 'hidden' }}>
-                  <div id = "body">
-                  <Box flex align='right' justify='right' margin={240} padding='100px' >
-                    <Route exact path='/' component={Home}/>
-                    <Route path='/st' component={StockTake} />
-                    <Route path='/ac' component={Account} />
-                    <Route path='/dr' component={Designer} />
-                    <Route path='/rp' component={Reports} />
-                    <Route path='/or' component={Orders} />
-                  </Box>
-                  </div>
-                </Box>
-              </Box>
-            )}
-          </ResponsiveContext.Consumer>
-        </Grommet>
-      </Router>
-    );
+  if (loading) {
+    return <Loading />;
   }
-}
+
+  return (
+    <Router history={history}>
+      <Grommet theme={theme} full>
+      <div id="app" className="d-flex flex-column h-100">
+        <NavBar />
+        <Container className="flex-grow-1 mt-5">
+          <Switch>
+            <Route path="/" exact component={Home} />
+            <PrivateRoute path="/profile" component={Profile} />
+            <PrivateRoute path="/dashboard" component={Dashboard} />
+            <PrivateRoute path="/orders" component={Orders} />
+            <PrivateRoute path="/designer" component={Designer} />
+            <PrivateRoute path="/reports" component={Reports} />
+            <PrivateRoute path="/stocktake" component={StockTake} />
+          </Switch>
+        </Container>
+        <Footer />
+      </div>
+      </Grommet>
+    </Router>
+  );
+};
 
 export default App;

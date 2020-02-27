@@ -51,7 +51,8 @@ class Designer extends Component {
 				<Row>
 					<Col md={9}>
 			<div>
-				<p style={{color:'#ffffff'}}>sduasgfhrsilfgho9shdigjiehtodfpugjdouirfud\o;sflhdiofghsdlnfkhzdvbsdliubflakhsdbfiuldfbguibdiubg</p>
+				<br/>
+				<br/>
 				<Jumbotron >
 					<Container>
 						<h1>Warehouse Designer</h1>
