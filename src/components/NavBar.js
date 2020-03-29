@@ -49,7 +49,7 @@ const NavBar = () => {
                 </NavLink>
               </NavItem>
               <NavItem>
-                <a className="nav-link" href="https://se-docs.now.sh/">Docs</a>
+                <a className="nav-link" href="https://se-docs.netlify.com/">Docs</a>
               </NavItem>
               {isAuthenticated && (
               <NavItem>
