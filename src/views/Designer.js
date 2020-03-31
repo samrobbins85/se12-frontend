@@ -23,7 +23,8 @@ function getBaysInZone(query) {
 
 
 class Designer extends Component {
-	componentWillMount() {
+	constructor(props){
+		super(props);
 
 		let zonesList;
 		fetch("http://127.0.0.1:3001/stockTake/getZones", {
@@ -60,15 +61,11 @@ class Designer extends Component {
 							});
 			 			x[aLoop.bays[0].zone] =temp1
 			 		});
-			 	this.setState({bays: x, zones: zonesList.zones});
+			 	this.state.bays = x;
+			 	this.state.zones = zonesList.zones;
 			 	console.log("Complete");
 			 });
 		 })
-	}
-
-	constructor(props){
-		super(props);
-
 	}
 
 	render() {
