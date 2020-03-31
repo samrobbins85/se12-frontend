@@ -60,48 +60,14 @@ class Designer extends Component {
 							});
 			 			x[aLoop.bays[0].zone] =temp1
 			 		});
-			 	this.setState({bays: x, zones: zonesList.zones})
+			 	this.setState({bays: x, zones: zonesList.zones});
+			 	console.log("Complete");
 			 });
 		 })
 	}
 
 	constructor(props){
 		super(props);
-		this.state = {warehouse:[
-									{   name:'Zone A',
-										Bays:[
-											[{id:'A1', dimension:{width:3,height:3}},{id:'A2', dimension:{width:3,height:3}},{id:'A3', dimension:{width:3,height:3}},{id:'A4', dimension:{width:3,height:3}},{id:'A5', dimension:{width:3,height:3}}],
-											[{id:'B1', dimension:{width:3,height:3}},{id:'B2', dimension:{width:3,height:3}},{id:'B3', dimension:{width:3,height:3}},{id:'B4', dimension:{width:3,height:3}},{id:'B5', dimension:{width:3,height:3}}],
-											[{id:'C1', dimension:{width:3,height:3}},{id:'C2', dimension:{width:3,height:3}},{id:'C3', dimension:{width:3,height:3}},{id:'C4', dimension:{width:3,height:3}},{id:'C5', dimension:{width:3,height:3}}],
-											[{id:'D1', dimension:{width:3,height:3}},{id:'D2', dimension:{width:3,height:3}},{id:'D3', dimension:{width:3,height:3}},{id:'D4', dimension:{width:3,height:3}},{id:'D5', dimension:{width:3,height:3}}],
-
-											]
-									},
-									{   name:'Zone B',
-										Bays:[
-											[{id:'A1', dimension:{width:3,height:3}},{id:'A2', dimension:{width:3,height:3}},{id:'A3', dimension:{width:3,height:3}},{id:'A4', dimension:{width:3,height:3}},{id:'A5', dimension:{width:3,height:3}}],
-											[{id:'B1', dimension:{width:3,height:3}},{id:'B2', dimension:{width:3,height:3}},{id:'B3', dimension:{width:3,height:3}},{id:'B4', dimension:{width:3,height:3}},{id:'B5', dimension:{width:3,height:3}}],
-											[{id:'C1', dimension:{width:3,height:3}},{id:'C2', dimension:{width:3,height:3}},{id:'C3', dimension:{width:3,height:3}},{id:'C4', dimension:{width:3,height:3}},{id:'C5', dimension:{width:3,height:3}}],
-											[{id:'D1', dimension:{width:3,height:3}},{id:'D2', dimension:{width:3,height:3}},{id:'D3', dimension:{width:3,height:3}},{id:'D4', dimension:{width:3,height:3}},{id:'D5', dimension:{width:3,height:3}}],
-										]
-									},
-				{   name:'Zone C',
-					Bays:[
-						[{id:'A1', dimension:{width:3,height:3}},{id:'A2', dimension:{width:3,height:3}},{id:'A3', dimension:{width:3,height:3}},{id:'A4', dimension:{width:3,height:3}},{id:'A5', dimension:{width:3,height:3}}],
-						[{id:'B1', dimension:{width:3,height:3}},{id:'B2', dimension:{width:3,height:3}},{id:'B3', dimension:{width:3,height:3}},{id:'B4', dimension:{width:3,height:3}},{id:'B5', dimension:{width:3,height:3}}],
-						[{id:'C1', dimension:{width:3,height:3}},{id:'C2', dimension:{width:3,height:3}},{id:'C3', dimension:{width:3,height:3}},{id:'C4', dimension:{width:3,height:3}},{id:'C5', dimension:{width:3,height:3}}],
-						[{id:'D1', dimension:{width:3,height:3}},{id:'D2', dimension:{width:3,height:3}},{id:'D3', dimension:{width:3,height:3}},{id:'D4', dimension:{width:3,height:3}},{id:'D5', dimension:{width:3,height:3}}],
-					]
-				},
-				{   name:'Zone D',
-					Bays:[
-						[{id:'A1', dimension:{width:3,height:3}},{id:'A2', dimension:{width:3,height:3}},{id:'A3', dimension:{width:3,height:3}},{id:'A4', dimension:{width:3,height:3}},{id:'A5', dimension:{width:3,height:3}}],
-						[{id:'B1', dimension:{width:3,height:3}},{id:'B2', dimension:{width:3,height:3}},{id:'B3', dimension:{width:3,height:3}},{id:'B4', dimension:{width:3,height:3}},{id:'B5', dimension:{width:3,height:3}}],
-						[{id:'C1', dimension:{width:3,height:3}},{id:'C2', dimension:{width:3,height:3}},{id:'C3', dimension:{width:3,height:3}},{id:'C4', dimension:{width:3,height:3}},{id:'C5', dimension:{width:3,height:3}}],
-						[{id:'D1', dimension:{width:3,height:3}},{id:'D2', dimension:{width:3,height:3}},{id:'D3', dimension:{width:3,height:3}},{id:'D4', dimension:{width:3,height:3}},{id:'D5', dimension:{width:3,height:3}}],
-					]
-				}
-					]}
 
 	}
 
