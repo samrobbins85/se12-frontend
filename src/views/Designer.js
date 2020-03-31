@@ -62,6 +62,7 @@ class Designer extends Component {
 			 		});
 			 	this.setState({bays: x, zones: zonesList.zones});
 			 	console.log("Complete");
+			 	render();
 			 });
 		 })
 	}
