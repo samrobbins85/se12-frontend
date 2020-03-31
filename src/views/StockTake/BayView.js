@@ -36,7 +36,8 @@ class BayView extends Component {
 		this.categories = ['Tinned Fruit', 'Tinned Beans', 'Tinned Soup', 'Tinned Sauce', 'Cereal', 'Pasta', 'Juice', 'Milk', 'Toiletries', 'Nappies', 'Feminine Products', 'Cleaning Products']
 	}
 	componentWillReceiveProps(nextProps, nextContext) {
-			console.log("New props received from parent: ", nextProps)
+			console.log("componentWillReceiveProps says current props are: ", this.props)
+			console.log("componentWillReceiveProps says new props are: ", nextProps)
 	}
 
 	callbackFunction = (childData) => {
@@ -48,7 +49,9 @@ class BayView extends Component {
 	};
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
-		console.log("componentDidUpdate said prev state is: ",)
+		// console.log("componentDidUpdate said prev props are: ",prevProps)
+		// console.log("componentDidUpdate said current props are: ",this.props)
+
 		this.prevstate = {x:prevProps.db};
 	}
 
@@ -116,7 +119,7 @@ class BayView extends Component {
 	sendData = (data) => {
 		// console.log("fuck react up the ass", { x:this.props.db})
 
-		this.props.parentCallback({ target:{zone:data.x[0].zone, bay:data.x[0].bay} ,newstate:data.x});
+		this.props.parentCallback("update",{ target:{zone:data.x[0].zone, bay:data.x[0].bay} ,newstate:data.x});
 	};
 
 	render() {
@@ -180,14 +183,14 @@ class BayView extends Component {
 								<Col>
 									<Box align="center" style={{paddingTop: '10px'}}>
 										<Button label="Undo" fill onClick={() => {
-											console.log("will try to revert to this: ", this.prevstate)
-											this.sendData(this.prevstate)
+											this.props.parentCallback("undo",{})
 										}}/>
 									</Box>
 								</Col>
 								<Col>
 									<Box align="center" style={{paddingTop: '10px'}}>
 										<Button label="Redo" fill onClick={() => {
+											this.props.parentCallback("redo",{})
 										}}/>
 									</Box>
 								</Col>

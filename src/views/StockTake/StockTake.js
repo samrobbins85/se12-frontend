@@ -104,6 +104,7 @@ class StockTake extends Component {
 	 constructor(props) {
 		 super(props);
 		 this.loading = true
+		 this.undoRedo = {head: 0 , stack:[]}
 		 this.state = {selected: {zone: 0, bay: 0}, zones: [
 				 {
 				 		 "_id": NaN,
@@ -117,9 +118,35 @@ class StockTake extends Component {
 	}
 
 
-	callbackFunction = (childData) => {
+	callbackFunction = (command, received) => {
 		// TODO: Sync changes made to the server once the API is able to support it.
-		console.log("Bayview sent a new state... : ",childData);
+
+		let childData = received;
+
+		if (command === "undo"){
+			if (this.undoRedo.head === 0){
+				return false
+			}
+			this.undoRedo.head --
+			childData = this.undoRedo.stack[this.undoRedo.head];
+			childData = JSON.parse(childData)
+		}else{
+			if (command == "redo"){
+				if (this.undoRedo.head === (this.undoRedo.stack.length-1) ){
+					return false
+				}
+				this.undoRedo.head ++
+				childData = this.undoRedo.stack[this.undoRedo.head];
+				childData = JSON.parse(childData)
+			}else {
+				this.undoRedo.stack = this.undoRedo.stack.slice(0,this.undoRedo.head)
+				this.undoRedo.stack.push(JSON.stringify(childData))
+				this.undoRedo.head++
+			}
+		}
+
+		console.log("head is pointing: ", this.head)
+
 		let temp = this.state.db ;
 		temp[childData.target.zone+"-"+childData.target.bay] = childData.newstate;
 		for (let loop = 0; loop < childData.newstate.length; loop++){

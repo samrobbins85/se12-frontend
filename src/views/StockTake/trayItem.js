@@ -6,7 +6,6 @@ class TrayItem extends Component {
 		super(props);
 		this.state = {selected:this.props.selected};
 		this.handleClick = this.handleClick.bind(this);
-		console.log("Tray item's properties are: ",props);
 
 	}
 
