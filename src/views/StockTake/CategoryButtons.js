@@ -11,32 +11,6 @@ class CategoryButtons extends Component {
 		this.handleClick = this.handleClick.bind(this);
 	}
 
-	componentWillMount() {
-
-	}
-
-	componentDidMount() {
-
-	}
-
-	componentWillReceiveProps(nextProps) {
-
-	}
-
-
-	componentWillUpdate(nextProps, nextState) {
-
-	}
-
-	componentDidUpdate(prevProps, prevState) {
-		console.log(this.state.selected);
-
-	}
-
-	componentWillUnmount() {
-
-	}
-
 	handleClick = (id) => {
 
 		this.setState({selected: id});

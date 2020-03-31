@@ -24,35 +24,41 @@ class BayView extends Component {
 		super(props);
 		this.state = {};
 		// this.props.db = this.props.db;
+		console.log("The props received in BayView are: ",props);
+		// this.props.db = props.db["RED-A"];
+		
 		this.y = new Date();
 		this.y = this.y.getYear();
-		this.selectedList = [false, false, false, false, false, false, false, false, false]
+		this.selectedList = [];
+		for (let loop = 0; loop < this.props.db.length; loop++){
+			this.selectedList.push(false)
+		}
 		this.categories = ['Tinned Fruit', 'Tinned Beans', 'Tinned Soup', 'Tinned Sauce', 'Cereal', 'Pasta', 'Juice', 'Milk', 'Toiletries', 'Nappies', 'Feminine Products', 'Cleaning Products']
+	}
+	componentWillReceiveProps(nextProps, nextContext) {
+			console.log("New props received from parent: ", nextProps)
 	}
 
 	callbackFunction = (childData) => {
-		this.selectedList[childData.id - 1] = childData.selected;
+		for (let loop = 0; loop < this.props.db.length; loop++){
+			if (this.props.db[loop]._id === childData.id){
+				this.selectedList[loop] = childData.selected
+			}
+		}
 	};
 
 	performCategoryChange = (ef) => {
 		if (this.selectedList.includes(true)) {
 			let temp1 = [];
 			for (let y = 0; y < this.props.db.length; y++) {
-				temp1.push(this.props.db[y][0]);
-				temp1.push(this.props.db[y][1]);
-				temp1.push(this.props.db[y][2]);
+				temp1.push(this.props.db[y]);
 			}
 			for (let y = 0; y < this.selectedList.length; y++) {
 				if (this.selectedList[y] === true) {
-					temp1[y].title = ef.id;
+					temp1[y].contents = ef.id;
 				}
 			}
-			let temp = [];
-			for (let y = 0; y < 9; y += 3) {
-
-				temp.push([temp1[y], temp1[y + 1], temp1[y + 2]])
-			}
-			this.setState({x: temp})
+			this.sendData({x: temp1})
 		}
 
 	};
@@ -60,27 +66,36 @@ class BayView extends Component {
 		if (this.selectedList.includes(true)) {
 			let temp1 = [];
 			for (let y = 0; y < this.props.db.length; y++) {
-				temp1.push(this.props.db[y][0]);
-				temp1.push(this.props.db[y][1]);
-				temp1.push(this.props.db[y][2]);
+				temp1.push(this.props.db[y]);
 			}
 			for (let y = 0; y < this.selectedList.length; y++) {
 				if (this.selectedList[y] === true) {
+
+
+
 					if (Number.isInteger(ef)) {
+						// this is the case that it is a year
 						temp1[y].expiry = ef.toString()
 					} else {
-						if (parseFloat(temp1[y].expiry)) {
-							temp1[y].expiry = ef + " " + temp1[y].expiry;
+						if (!temp1[y].expiry.includes("/")) {
+							temp1[y].expiry = ef + "/" + temp1[y].expiry;
 						}
 					}
+					//
+					// if (Number.isInteger(ef)) {
+					// 	temp1[y].expiry = ef.toString()
+					// } else {
+					// 	if (parseFloat(temp1[y].expiry)) {
+					// 		temp1[y].expiry = ef + "/" + temp1[y].expiry;
+					// 	}
+					// }
+
+
+
+
 				}
 			}
-			let temp = [];
-			for (let y = 0; y < 9; y += 3) {
-
-				temp.push([temp1[y], temp1[y + 1], temp1[y + 2]])
-			}
-			this.setState({x: temp})
+			this.sendData({x: temp1})
 		}
 
 	};
@@ -93,67 +108,46 @@ class BayView extends Component {
 				new_weight = null
 			} else {
 				new_weight = parseFloat(ef.weight);
-				new_weight = new_weight.toString() + 'kg'
 			}
 
 			let temp1 = [];
 			for (let y = 0; y < this.props.db.length; y++) {
-				temp1.push(this.props.db[y][0]);
-				temp1.push(this.props.db[y][1]);
-				temp1.push(this.props.db[y][2]);
+				temp1.push(this.props.db[y]);
 			}
 			for (let y = 0; y < this.selectedList.length; y++) {
 				if (this.selectedList[y] === true) {
 					temp1[y].weight = new_weight;
 				}
 			}
-			let temp = [];
-			for (let y = 0; y < 9; y += 3) {
-
-				temp.push([temp1[y], temp1[y + 1], temp1[y + 2]])
-			}
-			this.setState({x: temp})
+			this.sendData({x: temp1})
 		}
 
 	};
 
-	componentDidUpdate(prevProps, prevState) {
+	// componentDidUpdate(prevProps, prevState) {
+	// 	if (typeof this.state.x !== 'undefined') {
+	// 		this.sendData()
+	// 	}
+	// }
 
 
-		if (typeof this.state.x !== 'undefined') {
-
-
-			this.sendData()
-		}
-	}
-
-
-	sendData = () => {
-		let newArr = [];
-		for (let loop = 0; loop < this.state.x.length; loop++) {
-			newArr = newArr.concat(this.state.x[loop]);
-		}
-		this.props.parentCallback(newArr);
+	sendData = (data) => {
+		this.props.parentCallback({ target:{zone:data.x[0].zone, bay:data.x[0].bay} ,newstate:data.x});
 	};
 
 	render() {
 
 
 		return (<div>
-				{/*style={{left: '50%', transform: 'translate(20%, 5%)'}}*/}
 
 				{/*Here is the The box containing the Trays*/}
 
 				<div style={{background: '#f4f4f4', padding: '20px', borderRadius: '20px'}}>
+					<CardDeck style={{padding: '20px'}}>
 					{this.props.db.map(z => {
-						return <CardDeck style={{padding: '20px'}}>
-
-							{z.map(i => {
-								return <TrayItem i={i} y={this.y} parentCallback={this.callbackFunction}/>
-
-							})}
-						</CardDeck>
+						return <TrayItem i={z} y={this.y} parentCallback={this.callbackFunction}/>
 					})}
+					</CardDeck>
 				</div>
 
 				{/*Here we have the bay functions*/}
@@ -225,59 +219,29 @@ class BayView extends Component {
 									<Row style={{paddingTop: '10px'}}>
 										<Col>
 											<Box align="center">
-												<Button label="January " fill onClick={() => {
-													this.performExpiryChange("January")
+												<Button label="01 January" fill onClick={() => {
+													this.performExpiryChange("01")
 												}}/>
 											</Box>
 										</Col>
 										<Col>
 											<Box align="center">
-												<Button label="February" fill onClick={() => {
-													this.performExpiryChange("February")
+												<Button label="02 February" fill onClick={() => {
+													this.performExpiryChange("02")
 												}}/>
 											</Box>
 										</Col>
 										<Col>
 											<Box align="center">
-												<Button label="March" fill onClick={() => {
-													this.performExpiryChange("March")
+												<Button label="03 March" fill onClick={() => {
+													this.performExpiryChange("03")
 												}}/>
 											</Box>
 										</Col>
 										<Col>
 											<Box align="center">
-												<Button label="April" fill onClick={() => {
-													this.performExpiryChange("April")
-												}}/>
-											</Box>
-										</Col>
-									</Row>
-									<Row style={{paddingTop: '10px'}}>
-										<Col>
-											<Box align="center">
-												<Button label="May " fill onClick={() => {
-													this.performExpiryChange("May")
-												}}/>
-											</Box>
-										</Col>
-										<Col>
-											<Box align="center">
-												<Button label="June" fill onClick={() => {
-													this.performExpiryChange("June")
-												}}/>
-											</Box>
-										</Col>
-										<Col>
-											<Box align="center">
-												<Button label="July" fill onClick={() => {
-													this.performExpiryChange("July")
-												}}/>
-											</Box>
-										</Col>
-										<Col>
-											<Box align="center">
-												<Button label="August" fill onClick={() => {
-													this.performExpiryChange("August")
+												<Button label="04 April" fill onClick={() => {
+													this.performExpiryChange("04")
 												}}/>
 											</Box>
 										</Col>
@@ -285,29 +249,59 @@ class BayView extends Component {
 									<Row style={{paddingTop: '10px'}}>
 										<Col>
 											<Box align="center">
-												<Button label="September " fill onClick={() => {
-													this.performExpiryChange("September")
+												<Button label="05 May" fill onClick={() => {
+													this.performExpiryChange("05")
 												}}/>
 											</Box>
 										</Col>
 										<Col>
 											<Box align="center">
-												<Button label="October" fill onClick={() => {
-													this.performExpiryChange("October")
+												<Button label="06 June" fill onClick={() => {
+													this.performExpiryChange("06")
 												}}/>
 											</Box>
 										</Col>
 										<Col>
 											<Box align="center">
-												<Button label="November" fill onClick={() => {
-													this.performExpiryChange("November")
+												<Button label="07 July" fill onClick={() => {
+													this.performExpiryChange("07")
 												}}/>
 											</Box>
 										</Col>
 										<Col>
 											<Box align="center">
-												<Button label="December" fill onClick={() => {
-													this.performExpiryChange("December")
+												<Button label="08 August" fill onClick={() => {
+													this.performExpiryChange("08")
+												}}/>
+											</Box>
+										</Col>
+									</Row>
+									<Row style={{paddingTop: '10px'}}>
+										<Col>
+											<Box align="center">
+												<Button label="09 September" fill onClick={() => {
+													this.performExpiryChange("09")
+												}}/>
+											</Box>
+										</Col>
+										<Col>
+											<Box align="center">
+												<Button label="10 October" fill onClick={() => {
+													this.performExpiryChange("10")
+												}}/>
+											</Box>
+										</Col>
+										<Col>
+											<Box align="center">
+												<Button label="11 November" fill onClick={() => {
+													this.performExpiryChange("11")
+												}}/>
+											</Box>
+										</Col>
+										<Col>
+											<Box align="center">
+												<Button label="12 December" fill onClick={() => {
+													this.performExpiryChange("12")
 												}}/>
 											</Box>
 										</Col>

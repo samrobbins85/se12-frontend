@@ -3,59 +3,155 @@ import BayView from "./BayView";
 import {Col, Container, Jumbotron, Row} from "react-bootstrap";
 import {Box, Button, Menu} from "grommet/es6";
 
+function getTraysInBay(query) {
+	return new Promise((resolve, reject) => {
+		fetch('http://127.0.0.1:3001/stockTake/getTraysInBay', {
+			method: 'POST',
+			mode: 'cors',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(query)
+		})
+			.then((resp) => resp.json())
+			.then((data) => {
+				resolve(data)
+			})
+	});
+}
+
+function getBaysInZone(query) {
+	return new Promise((resolve, reject) => {
+		fetch('http://127.0.0.1:3001/stockTake/getBaysInZone', {
+			method: 'POST',
+			mode: 'cors',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(query)
+		})
+			.then((resp) => resp.json())
+			.then((data) => {
+				resolve(data)
+			})
+	});
+}
+
 class StockTake extends Component {
 
-	constructor(props) {
-		super(props);
-		// TODO: Make sure that Bays and zones are pulled from the server in the right format once there is actual dummy data.
-		let x = [[{id: 1, title: 'Tinned Apples', expiry: '2020', weight: '2000kg'}, {
-			id: 2,
-			title: 'Tinned Apples',
-			expiry: '2021',
-			weight: '2000kg'
-		}, {id: 3, title: 'Tinned Apples', expiry: '2020', weight: null}], [{
-			id: 4,
-			title: 'Tinned Apples',
-			expiry: '2020',
-			weight: '2000kg'
-		}, {id: 5, title: 'Tinned Apples', expiry: '2021', weight: '2000kg'}, {
-			id: 6,
-			title: 'Tinned Apples',
-			expiry: '2020',
-			weight: null
-		}], [{id: 7, title: 'Tinned Apples', expiry: '2020', weight: '2000kg'}, {
-			id: 8,
-			title: 'Tinned Apples',
-			expiry: '2020',
-			weight: '2000kg'
-		}, {id: 9, title: 'Tinned Apples', expiry: '2021', weight: null}]];
+	componentDidMount() {
 
+		let fuckReact;
+		fetch("http://127.0.0.1:3001/stockTake/getZones", {
+		 method: 'GET',
+		 mode: 'cors',
+		 headers: {
+			 'Content-Type': 'application/json'
+		 }
+		})
+		 .then(res => res.json())
+		 .then((data) => {
+			 fuckReact = data;
 
-		this.state = {
-			db: [[x, x], [x, x], [x, x], [x, x], [x, x], [x, x]],
-			selected: {zone: 4, bay: 10},
-			zones: [
-				{_id: "5e28562ed1fbad2e68287983", name: "0", height: 2, width: 6, bays: [1, 2]},
-				{_id: "5e2856a6d1fbad2e68287984", name: "1", height: 2, width: 6, bays: [3, 4]},
-				{_id: "5e2a26d0e7aaa7314c58a3ff", name: "2", height: 69, width: 420, bays: [5, 6]},
-				{_id: "5e2b2e9d157fd0087051fc72", name: "3", height: 10, width: 10, bays: [7, 8]},
-				{_id: "5e3309096c64f1561c3fc672", name: "4", height: 6, width: 2, bays: [9, 10]},
-				{_id: "5e3309486c64f1561c3fc673", name: "5", height: 6, width: 2, bays: [11, 12]}
-			]
-		};
+			 // fetch all the bays and their contents but not their sizes.
 
+			 let querys = [];
+			 let querys1 = [];
+			 for(let zone = 0; zone < data.zones.length; zone++){
+				 querys1.push({"zone":data.zones[zone].zone});
+				 for (let bay =0; bay < data.zones[zone].bays.length; bay++){
+					 querys.push({"zone":data.zones[zone].zone, "bay":data.zones[zone].bays[bay]});
+				}
+			 }
 
+			 let sevedQuerys = [];
+			 querys.forEach(
+				 (my_query)=>{
+					 sevedQuerys.push(getTraysInBay(my_query))
+				 });
+			 Promise.all(sevedQuerys).then((allTrayData)=>{
+				 let fml = {}
+				 for (let loop = 0; loop < allTrayData.length; loop++){
+				 	fml[allTrayData[loop].trays[0].zone + "-" + allTrayData[loop].trays[0].bay] = allTrayData[loop].trays
+				 }
+				 let sevedQuerys1 = [];
+				 querys1.forEach(
+					 (my_query)=>{
+						 sevedQuerys1.push(getBaysInZone(my_query))
+					 });
+				 Promise.all(sevedQuerys1).then((allBayData)=>{
+				 	let x = {};
+					 allBayData.forEach((aLoop) => {
+					 	let temp = aLoop.bays;
+						 let temp1 = {};
+						 temp.forEach((loop) => {
+						 	temp1[loop.bay] = {xVal:loop.xVal , yVal:loop.yVal, xSize:loop.xSize , ySize:loop.ySize}
+						 });
+					 	x[aLoop.bays[0].zone] =temp1
+					 });
+					 this.setState({bays: x, zones: fuckReact.zones, db: fml, selected: {zone: 0, bay: 0}})
+				 })
+			 })
+		 })
+	}
+
+	componentDidUpdate(prevProps, prevState) {
+		console.log("new state!! ",this.state)
+	}
+
+	 constructor(props) {
+		 super(props);
+		 this.state = {selected: {zone: 0, bay: 0}, zones: [
+				 {
+				 		 "_id": NaN,
+				 		 "zone": "RED",
+				 		 "height": 1,
+				 		 "width": 1,
+				 		 "bays": ["A"]
+				 	 },
+
+			 ], db:{"RED-A":[{"_id":"5e8131656ff5f04ac8e4d12f","zone":"RED","bay":"A","tray":"0","contents":"Tinned soup","expiry":"","weight":"0"}]}};
 	}
 
 
 	callbackFunction = (childData) => {
 		// TODO: Sync changes made to the server once the API is able to support it.
-		// Each Bay will have an id which makes syncing it actually feasible
-		// Im currently not saving changes made because the ids format aren't finalised.
-		console.log('I will actually save this locally and sync up once server is ready');
+		console.log("Bayview sent a new state... : ",childData);
+		let temp = this.state.db ;
+		temp[childData.target.zone+"-"+childData.target.bay] = childData.newstate;
+		for (let loop = 0; loop < childData.newstate.length; loop++){
+
+			fetch('http://127.0.0.1:3001/stockTake/editTray',{
+				method: 'POST',
+				mode: 'cors',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					"zone": childData.target.zone,
+					"bay": childData.target.bay,
+					"tray": childData.newstate[loop].tray,
+					"contents": childData.newstate[loop].contents,
+					"weight": childData.newstate[loop].weight,
+					"expiry": childData.newstate[loop].expiry,
+					"xpos": childData.newstate[loop].xpos,
+					"ypos": childData.newstate[loop].ypos,
+				})
+			})
+				.then(res => {
+
+					res.json();
+					if (!res.ok){
+						loop--
+					}
+				}).catch(console.log)
+
+		}
+		this.setState({db:temp})
 	};
 
 	render() {
+
 		return (
 			<div>
 				<Container>
@@ -65,14 +161,14 @@ class StockTake extends Component {
 								<Container>
 									<h1>Zone
 										<Menu
-											label={this.state.selected.zone}
-											items={this.state.zones.map(z => {
+											label={ this.state.zones[this.state.selected.zone].zone   }
+											items={this.state.zones.map((z,index) => {
 												return {
-													label: z.name, onClick: () => {
+													label: z.zone, onClick: () => {
 														this.setState({
 															selected: {
-																zone: parseInt(z.name),
-																bay: this.state.zones[z.name].bays[0]
+																zone: index,
+																bay: 0 //this.state.zones[z.name].bays[0]
 															}
 														})
 													}
@@ -80,22 +176,22 @@ class StockTake extends Component {
 											})}
 										/>
 										Bay
-										<Menu label={this.state.selected.bay}
+										<Menu label={this.state.zones[this.state.selected.zone].bays[this.state.selected.bay]}
 
 
-										      items={this.state.zones[this.state.selected.zone].bays.map(z => {
-											      return {
-												      label: z, onClick: () => {
-													      this.setState({
-														      selected: {
-															      zone: parseInt(this.state.selected.zone),
-															      bay: z
-														      }
-													      })
+											  items={this.state.zones[this.state.selected.zone].bays.map((z,index) => {
+												  return {
+													  label: z, onClick: () => {
+														  this.setState({
+															  selected: {
+																  zone: parseInt(this.state.selected.zone),
+																  bay: index
+															  }
+														  })
 
-												      }
-											      }
-										      })}
+													  }
+												  }
+											  })}
 										/>
 									</h1>
 
@@ -109,14 +205,12 @@ class StockTake extends Component {
 							<Box align="center" height="60px" width="130px">
 								<Button label="Previous" fill onClick={() => {
 
-									let current_bay = this.state.zones[this.state.selected.zone].bays;
-									let loc = current_bay.indexOf(this.state.selected.bay);
 
-									if (loc - 1 < current_bay.length) {
+									if (this.state.selected.bay - 1 >= 0) {
 										this.setState({
 											selected: {
 												zone: this.state.selected.zone,
-												bay: current_bay[loc - 1]
+												bay: this.state.selected.bay - 1
 											}
 										})
 
@@ -126,21 +220,21 @@ class StockTake extends Component {
 							</Box>
 						</Col>
 						<Col md={{span: 8, offset: 0}}>
-							<BayView db={this.state.db[this.state.selected.zone][0]}
-							         parentCallback={this.callbackFunction}/>
+							{/*<BayView db={this.state.db[ this.state.zones[this.state.selected.zone].zone + "-" + this.state.zones[this.state.selected.zone].bays[this.state.selected.bay]]}*/}
+							<BayView dimensons = {this.state.bays === undefined ? NaN : this.state.bays[ this.state.zones[this.state.selected.zone].zone ][ this.state.zones[this.state.selected.zone].bays[this.state.selected.bay]]} db={this.state.db[this.state.zones[this.state.selected.zone].zone + "-" + this.state.zones[this.state.selected.zone].bays[this.state.selected.bay]]} quer = {this.state.zones[this.state.selected.zone].zone + "-" + this.state.zones[this.state.selected.zone].bays[this.state.selected.bay]}
+
+									 parentCallback={this.callbackFunction}/>
 						</Col>
 						<Col md={{span: 2, offset: 14}}>
 							<Box align="center" height="60px" width="130px">
 								<Button label="Next" fill onClick={() => {
 
-									let current_bay = this.state.zones[this.state.selected.zone].bays;
-									let loc = current_bay.indexOf(this.state.selected.bay);
 
-									if (loc + 1 < current_bay.length) {
+									if (this.state.selected.bay + 1 < this.state.zones[this.state.selected.zone].bays.length) {
 										this.setState({
 											selected: {
 												zone: this.state.selected.zone,
-												bay: current_bay[loc + 1]
+												bay: this.state.selected.bay + 1
 											}
 										})
 

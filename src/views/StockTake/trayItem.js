@@ -6,31 +6,15 @@ class TrayItem extends Component {
 		super(props);
 		this.state = {selected:false};
 		this.handleClick = this.handleClick.bind(this);
-	}
-
-
-	componentWillMount() {
+		console.log("Tray item's properties are: ",props);
 
 	}
+
 
 	componentDidMount() {
 
 	}
 
-	componentWillReceiveProps(nextProps) {
-
-	}
-
-	shouldComponentUpdate(nextProps, nextState) {
-
-		return true
-	}
-
-	componentWillUpdate(nextProps, nextState) {
-
-
-
-	}
 
 	componentDidUpdate(prevProps, prevState) {
 
@@ -51,7 +35,7 @@ class TrayItem extends Component {
 	};
 
 	sendData = () => {
-		this.props.parentCallback({id:this.props.i.id,selected:!this.state.selected});
+		this.props.parentCallback({id:this.props.i._id,selected:!this.state.selected});
 	};
 
 	render() {
@@ -60,10 +44,12 @@ class TrayItem extends Component {
 			<div style={this.state.selected === true ? {borderRadius:'10px',borderStyle: 'solid', borderColor:'#2196f3'}:{}}>
 			<Card onClick={this.handleClick} >
 				<Card.Body >
-					<Card.Title>{this.props.i.title}</Card.Title>
+					<Card.Title>{this.props.i.contents}</Card.Title>
 					<Card.Text>
-						<div> <Badge variant="light"> Weight:{this.props.i.weight == null ? 'N/A':this.props.i.weight}</Badge></div>
-						<div> <Badge variant={this.props.y< ((parseInt(this.props.i.expiry.slice((this.props.i.expiry.length -4),this.props.i.expiry.length))) - 1900) ? (this.props.y< ((parseInt(this.props.i.expiry.slice((this.props.i.expiry.length -4),this.props.i.expiry.length))) - 1901)  ? "success":"warning"):"danger"}> Expires: {this.props.i.expiry}</Badge></div>
+						<div> <Badge variant="light"> Weight:{this.props.i.weight == null ? 'N/A':this.props.i.weight} kg</Badge></div>
+						{/*<div> <Badge variant={this.props.y< ((parseInt(this.props.i.expiry.slice((this.props.i.expiry.length -4),this.props.i.expiry.length))) - 1900) ? (this.props.y< ((parseInt(this.props.i.expiry.slice((this.props.i.expiry.length -4),this.props.i.expiry.length))) - 1901)  ? "success":"warning"):"danger"}> Expires: {this.props.i.expiry}</Badge></div>*/}
+						<div> <Badge variant={(parseInt( this.props.i.expiry.split("/").length > 1 ? this.props.i.expiry.split("/")[1]:this.props.i.expiry.split("/")[0] ) > 2021 ? "success" : (  parseInt( this.props.i.expiry.split("/").length > 1 ? this.props.i.expiry.split("/")[1]:this.props.i.expiry.split("/")[0] ) < 2021 ? "danger":"warning") )}> Expires: {this.props.i.expiry}</Badge></div>
+
 
 					</Card.Text>
 				</Card.Body>
