@@ -4,9 +4,67 @@ import {Alert, Col, Container, Jumbotron, Row} from "react-bootstrap";
 import {SettingsOption, Add, Trash, DocumentExcel} from "grommet-icons";
 import {grommet} from "grommet/themes";
 
+function getBaysInZone(query) {
+	return new Promise((resolve, reject) => {
+		fetch('http://127.0.0.1:3001/stockTake/getBaysInZone', {
+			method: 'POST',
+			mode: 'cors',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(query)
+		})
+			.then((resp) => resp.json())
+			.then((data) => {
+				resolve(data)
+			})
+	});
+}
 
 
 class Designer extends Component {
+	componentDidMount() {
+
+		let zonesList;
+		fetch("http://127.0.0.1:3001/stockTake/getZones", {
+		 method: 'GET',
+		 mode: 'cors',
+		 headers: {
+			 'Content-Type': 'application/json'
+		 }
+		})
+		 .then(res => res.json())
+		 .then((data) => {
+			 zonesList = data;
+
+			 let bayQuerys = [];
+			 for (let currentZone = 0; currentZone < zonesList.length; currentZone++) {
+			 	bayQuerys.push({"zone":data.zones[currentZone].zone});
+			 }
+
+			 let bayList = [];
+
+			 bayQuerys.forEach(
+			 	(query)=>{
+			 		bayList.push(getBaysInZone(query))
+			 	});
+			 Promise.all(bayList).then((allBayData)=>{
+			 	let x = {};
+			 	allBayData.forEach(
+			 		(aLoop) => {
+			 			let temp = aLoop.bays;
+			 			let temp1 = {};
+			 			temp.forEach(
+			 				(loop) => {
+			 					temp1[loop.bay] = {xVal:loop.xVal , yVal:loop.yVal, xSize:loop.xSize, ySize:loop.ySize, name:loop.bay}
+							});
+			 			x[aLoop.bays[0].zone] =temp1
+			 		});
+			 	this.setState({bays: x, zones: zonesList.zones})
+			 });
+		 })
+	}
+
 	constructor(props){
 		super(props);
 		this.state = {warehouse:[
@@ -70,8 +128,8 @@ class Designer extends Component {
 				<Accordion>
 
 
-				{this.state.warehouse.map(i =>{
-					return <AccordionPanel label={i.name}>
+				{this.state.zones.map(i =>{
+					return <AccordionPanel label={i.zone}>
 						<Box pad="medium" background="light-2">
 							<Alert  variant={'info'} style={{alignContent:'left'}}>
 								<Row>
@@ -103,13 +161,13 @@ class Designer extends Component {
 
 								</Row>
 							</Alert>
-							{i.Bays.map(z=>{
+							{this.state.bays[i.zone].map(z=>{
 								return z.map(a=>{
 
 									return <Accordion>
-											<AccordionPanel label={'Bay: '+a.id}>
+											<AccordionPanel label={'Bay: '+a.name}>
 										<Box pad="medium" background="light-2">
-											<text>{a.dimension.height}  trays high and {a.dimension.width} trays wide:</text>
+											<text>{a.ySize}  trays high and {a.xSize} trays wide:</text>
 											<Alert  variant={'success'} style={{alignContent:'left'}}>
 												<Row>
 													<Col>
