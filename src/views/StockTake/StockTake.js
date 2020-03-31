@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import BayView from "./BayView";
 import {Col, Container, Jumbotron, Row} from "react-bootstrap";
 import {Box, Button, Menu} from "grommet/es6";
+import Loading from "../../components/Loading";
 
 function getTraysInBay(query) {
 	return new Promise((resolve, reject) => {
@@ -89,6 +90,7 @@ class StockTake extends Component {
 						 });
 					 	x[aLoop.bays[0].zone] =temp1
 					 });
+					 this.loading = false;
 					 this.setState({bays: x, zones: fuckReact.zones, db: fml, selected: {zone: 0, bay: 0}})
 				 })
 			 })
@@ -101,6 +103,7 @@ class StockTake extends Component {
 
 	 constructor(props) {
 		 super(props);
+		 this.loading = true
 		 this.state = {selected: {zone: 0, bay: 0}, zones: [
 				 {
 				 		 "_id": NaN,
@@ -151,103 +154,106 @@ class StockTake extends Component {
 	};
 
 	render() {
-
-		return (
-			<div>
-				<Container>
-					<Row>
-						<Col md={12}>
-							<Jumbotron>
-								<Container>
-									<h1>Zone
-										<Menu
-											label={ this.state.zones[this.state.selected.zone].zone   }
-											items={this.state.zones.map((z,index) => {
-												return {
-													label: z.zone, onClick: () => {
-														this.setState({
-															selected: {
-																zone: index,
-																bay: 0 //this.state.zones[z.name].bays[0]
-															}
-														})
+		if (this.loading){
+			return <Loading/>
+		}else{
+			return (
+				<div>
+					<Container>
+						<Row>
+							<Col md={12}>
+								<Jumbotron>
+									<Container>
+										<h1>Zone
+											<Menu
+												label={ this.state.zones[this.state.selected.zone].zone   }
+												items={this.state.zones.map((z,index) => {
+													return {
+														label: z.zone, onClick: () => {
+															this.setState({
+																selected: {
+																	zone: index,
+																	bay: 0 //this.state.zones[z.name].bays[0]
+																}
+															})
+														}
 													}
-												}
-											})}
-										/>
-										Bay
-										<Menu label={this.state.zones[this.state.selected.zone].bays[this.state.selected.bay]}
+												})}
+											/>
+											Bay
+											<Menu label={this.state.zones[this.state.selected.zone].bays[this.state.selected.bay]}
 
 
-											  items={this.state.zones[this.state.selected.zone].bays.map((z,index) => {
-												  return {
-													  label: z, onClick: () => {
-														  this.setState({
-															  selected: {
-																  zone: parseInt(this.state.selected.zone),
-																  bay: index
-															  }
-														  })
+												  items={this.state.zones[this.state.selected.zone].bays.map((z,index) => {
+													  return {
+														  label: z, onClick: () => {
+															  this.setState({
+																  selected: {
+																	  zone: parseInt(this.state.selected.zone),
+																	  bay: index
+																  }
+															  })
 
+														  }
 													  }
-												  }
-											  })}
-										/>
-									</h1>
+												  })}
+											/>
+										</h1>
 
-								</Container>
-							</Jumbotron>
-						</Col>
-					</Row>
-					<Row>
+									</Container>
+								</Jumbotron>
+							</Col>
+						</Row>
+						<Row>
 
-						<Col md={{span: 2, offset: 0}}>
-							<Box align="center" height="60px" width="130px">
-								<Button label="Previous" fill onClick={() => {
-
-
-									if (this.state.selected.bay - 1 >= 0) {
-										this.setState({
-											selected: {
-												zone: this.state.selected.zone,
-												bay: this.state.selected.bay - 1
-											}
-										})
-
-									}
-
-								}}/>
-							</Box>
-						</Col>
-						<Col md={{span: 8, offset: 0}}>
-							{/*<BayView db={this.state.db[ this.state.zones[this.state.selected.zone].zone + "-" + this.state.zones[this.state.selected.zone].bays[this.state.selected.bay]]}*/}
-							<BayView dimensons = {this.state.bays === undefined ? NaN : this.state.bays[ this.state.zones[this.state.selected.zone].zone ][ this.state.zones[this.state.selected.zone].bays[this.state.selected.bay]]} db={this.state.db[this.state.zones[this.state.selected.zone].zone + "-" + this.state.zones[this.state.selected.zone].bays[this.state.selected.bay]]} quer = {this.state.zones[this.state.selected.zone].zone + "-" + this.state.zones[this.state.selected.zone].bays[this.state.selected.bay]}
-
-									 parentCallback={this.callbackFunction}/>
-						</Col>
-						<Col md={{span: 2, offset: 14}}>
-							<Box align="center" height="60px" width="130px">
-								<Button label="Next" fill onClick={() => {
+							<Col md={{span: 2, offset: 0}}>
+								<Box align="center" height="60px" width="130px">
+									<Button label="Previous" fill onClick={() => {
 
 
-									if (this.state.selected.bay + 1 < this.state.zones[this.state.selected.zone].bays.length) {
-										this.setState({
-											selected: {
-												zone: this.state.selected.zone,
-												bay: this.state.selected.bay + 1
-											}
-										})
+										if (this.state.selected.bay - 1 >= 0) {
+											this.setState({
+												selected: {
+													zone: this.state.selected.zone,
+													bay: this.state.selected.bay - 1
+												}
+											})
 
-									}
+										}
 
-								}}/>
-							</Box>
-						</Col>
-					</Row>
-				</Container>
-			</div>
+									}}/>
+								</Box>
+							</Col>
+							<Col md={{span: 8, offset: 0}}>
+								{/*<BayView db={this.state.db[ this.state.zones[this.state.selected.zone].zone + "-" + this.state.zones[this.state.selected.zone].bays[this.state.selected.bay]]}*/}
+								<BayView dimensons = {this.state.bays === undefined ? NaN : this.state.bays[ this.state.zones[this.state.selected.zone].zone ][ this.state.zones[this.state.selected.zone].bays[this.state.selected.bay]]} db={this.state.db[this.state.zones[this.state.selected.zone].zone + "-" + this.state.zones[this.state.selected.zone].bays[this.state.selected.bay]]} quer = {this.state.zones[this.state.selected.zone].zone + "-" + this.state.zones[this.state.selected.zone].bays[this.state.selected.bay]}
 
-		)
+										 parentCallback={this.callbackFunction}/>
+							</Col>
+							<Col md={{span: 2, offset: 14}}>
+								<Box align="center" height="60px" width="130px">
+									<Button label="Next" fill onClick={() => {
+
+
+										if (this.state.selected.bay + 1 < this.state.zones[this.state.selected.zone].bays.length) {
+											this.setState({
+												selected: {
+													zone: this.state.selected.zone,
+													bay: this.state.selected.bay + 1
+												}
+											})
+
+										}
+
+									}}/>
+								</Box>
+							</Col>
+						</Row>
+					</Container>
+				</div>
+
+			)
+		}
 	}
 
 }

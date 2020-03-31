@@ -22,7 +22,7 @@ class BayView extends Component {
 
 	constructor(props) {
 		super(props);
-		this.state = {};
+		this.state = {selectAll:false};
 		// this.props.db = this.props.db;
 		console.log("The props received in BayView are: ",props);
 		// this.props.db = props.db["RED-A"];
@@ -47,6 +47,11 @@ class BayView extends Component {
 		}
 	};
 
+	componentDidUpdate(prevProps, prevState, snapshot) {
+		console.log("componentDidUpdate said prev state is: ",)
+		this.prevstate = {x:prevProps.db};
+	}
+
 	performCategoryChange = (ef) => {
 		if (this.selectedList.includes(true)) {
 			let temp1 = [];
@@ -70,9 +75,6 @@ class BayView extends Component {
 			}
 			for (let y = 0; y < this.selectedList.length; y++) {
 				if (this.selectedList[y] === true) {
-
-
-
 					if (Number.isInteger(ef)) {
 						// this is the case that it is a year
 						temp1[y].expiry = ef.toString()
@@ -81,25 +83,12 @@ class BayView extends Component {
 							temp1[y].expiry = ef + "/" + temp1[y].expiry;
 						}
 					}
-					//
-					// if (Number.isInteger(ef)) {
-					// 	temp1[y].expiry = ef.toString()
-					// } else {
-					// 	if (parseFloat(temp1[y].expiry)) {
-					// 		temp1[y].expiry = ef + "/" + temp1[y].expiry;
-					// 	}
-					// }
-
-
-
-
 				}
 			}
 			this.sendData({x: temp1})
 		}
 
 	};
-
 	performWeightChange = (ef) => {
 		if (this.selectedList.includes(true)) {
 			let new_weight;
@@ -124,14 +113,9 @@ class BayView extends Component {
 
 	};
 
-	// componentDidUpdate(prevProps, prevState) {
-	// 	if (typeof this.state.x !== 'undefined') {
-	// 		this.sendData()
-	// 	}
-	// }
-
-
 	sendData = (data) => {
+		// console.log("fuck react up the ass", { x:this.props.db})
+
 		this.props.parentCallback({ target:{zone:data.x[0].zone, bay:data.x[0].bay} ,newstate:data.x});
 	};
 
@@ -145,7 +129,7 @@ class BayView extends Component {
 				<div style={{background: '#f4f4f4', padding: '20px', borderRadius: '20px'}}>
 					<CardDeck style={{padding: '20px'}}>
 					{this.props.db.map(z => {
-						return <TrayItem i={z} y={this.y} parentCallback={this.callbackFunction}/>
+						return <TrayItem i={z} y={this.y} parentCallback={this.callbackFunction} selected = {this.state.selectAll}/>
 					})}
 					</CardDeck>
 				</div>
@@ -159,6 +143,12 @@ class BayView extends Component {
 								<Col>
 									<Box align="center" height="60px">
 										<Button label="Select All" fill onClick={() => {
+
+											for (let loop = 0; loop < this.props.db.length; loop++){
+													this.selectedList[loop] = !this.selectedList[loop]
+											}
+											this.setState({selectAll:!this.state.selectAll})
+
 										}}/>
 									</Box>
 								</Col>
@@ -190,6 +180,8 @@ class BayView extends Component {
 								<Col>
 									<Box align="center" style={{paddingTop: '10px'}}>
 										<Button label="Undo" fill onClick={() => {
+											console.log("will try to revert to this: ", this.prevstate)
+											this.sendData(this.prevstate)
 										}}/>
 									</Box>
 								</Col>
@@ -342,8 +334,7 @@ class BayView extends Component {
 							<Tab title={<RichTabTitle icon={<Calculator color="#f44336"/>} label="Weight"/>}>
 								<Form
 									onReset={event => console.log(event)}
-									onSubmit={({value}) => this.performWeightChange(value)}
-								>
+									onSubmit={({value}) => this.performWeightChange(value)}>
 									<FormField label="Weight" name="weight"/>
 									<Box direction="row" justify="between" margin={{top: 'medium'}}>
 										<Button type="submit" label="Update" primary/>
@@ -353,7 +344,6 @@ class BayView extends Component {
 						</Tabs>
 					</Grommet>
 				</div>
-
 			</div>
 		);
 	}

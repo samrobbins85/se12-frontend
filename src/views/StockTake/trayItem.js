@@ -4,7 +4,7 @@ import {Badge, Card} from "react-bootstrap";
 class TrayItem extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {selected:false};
+		this.state = {selected:this.props.selected};
 		this.handleClick = this.handleClick.bind(this);
 		console.log("Tray item's properties are: ",props);
 
@@ -18,6 +18,10 @@ class TrayItem extends Component {
 
 	componentDidUpdate(prevProps, prevState) {
 
+	}
+
+	componentWillReceiveProps(nextProps, nextContext) {
+		this.setState({selected:nextProps.selected})
 	}
 
 	componentWillUnmount() {
