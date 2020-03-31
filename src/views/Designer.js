@@ -69,6 +69,8 @@ class Designer extends Component {
 	constructor(props){
 		super(props);
 
+		this.state.bays = {};
+		this.state.zonesList = [];
 	}
 
 	render() {
