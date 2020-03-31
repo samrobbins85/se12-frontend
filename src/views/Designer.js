@@ -23,7 +23,7 @@ function getBaysInZone(query) {
 
 
 class Designer extends Component {
-	componentDidMount() {
+	componentWillMount() {
 
 		let zonesList;
 		fetch("http://127.0.0.1:3001/stockTake/getZones", {
