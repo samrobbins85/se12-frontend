@@ -22,6 +22,40 @@ function getBaysInZone(query) {
 	});
 }
 
+function removeZone(zone) {
+	return new Promise((resolve, reject) => {
+		fetch('http://127.0.0.1:3001/stockTake/removeZone', {
+			method: 'POST',
+			mode: 'cors',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: zone
+		})
+			.then((resp) => resp.json())
+			.then((data) => {
+				resolve(data)
+			})
+	});
+}
+
+function removeBay(bay) {
+	return new Promise((resolve, reject) => {
+		fetch('http://127.0.0.1:3001/stockTake/removeBay', {
+			method: 'POST',
+			mode: 'cors',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: bay
+		})
+			.then((resp) => resp.json())
+			.then((data) => {
+				resolve(data)
+			})
+	});
+}
+
 
 class Designer extends Component {
 	componentDidMount() {
@@ -63,8 +97,6 @@ class Designer extends Component {
 			 		});
 
 			 	this.loading = false;
-			 	console.log(x);
-			 	console.log(zonesList);
 			 	this.setState({bays: x, zones: zonesList});
 			 });
 		 })
