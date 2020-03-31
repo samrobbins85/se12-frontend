@@ -67,42 +67,9 @@ class Designer extends Component {
 
 	constructor(props){
 		super(props);
-		this.state = {warehouse:[
-									{   name:'Zone A',
-										Bays:[
-											[{id:'A1', dimension:{width:3,height:3}},{id:'A2', dimension:{width:3,height:3}},{id:'A3', dimension:{width:3,height:3}},{id:'A4', dimension:{width:3,height:3}},{id:'A5', dimension:{width:3,height:3}}],
-											[{id:'B1', dimension:{width:3,height:3}},{id:'B2', dimension:{width:3,height:3}},{id:'B3', dimension:{width:3,height:3}},{id:'B4', dimension:{width:3,height:3}},{id:'B5', dimension:{width:3,height:3}}],
-											[{id:'C1', dimension:{width:3,height:3}},{id:'C2', dimension:{width:3,height:3}},{id:'C3', dimension:{width:3,height:3}},{id:'C4', dimension:{width:3,height:3}},{id:'C5', dimension:{width:3,height:3}}],
-											[{id:'D1', dimension:{width:3,height:3}},{id:'D2', dimension:{width:3,height:3}},{id:'D3', dimension:{width:3,height:3}},{id:'D4', dimension:{width:3,height:3}},{id:'D5', dimension:{width:3,height:3}}],
 
-											]
-									},
-									{   name:'Zone B',
-										Bays:[
-											[{id:'A1', dimension:{width:3,height:3}},{id:'A2', dimension:{width:3,height:3}},{id:'A3', dimension:{width:3,height:3}},{id:'A4', dimension:{width:3,height:3}},{id:'A5', dimension:{width:3,height:3}}],
-											[{id:'B1', dimension:{width:3,height:3}},{id:'B2', dimension:{width:3,height:3}},{id:'B3', dimension:{width:3,height:3}},{id:'B4', dimension:{width:3,height:3}},{id:'B5', dimension:{width:3,height:3}}],
-											[{id:'C1', dimension:{width:3,height:3}},{id:'C2', dimension:{width:3,height:3}},{id:'C3', dimension:{width:3,height:3}},{id:'C4', dimension:{width:3,height:3}},{id:'C5', dimension:{width:3,height:3}}],
-											[{id:'D1', dimension:{width:3,height:3}},{id:'D2', dimension:{width:3,height:3}},{id:'D3', dimension:{width:3,height:3}},{id:'D4', dimension:{width:3,height:3}},{id:'D5', dimension:{width:3,height:3}}],
-										]
-									},
-				{   name:'Zone C',
-					Bays:[
-						[{id:'A1', dimension:{width:3,height:3}},{id:'A2', dimension:{width:3,height:3}},{id:'A3', dimension:{width:3,height:3}},{id:'A4', dimension:{width:3,height:3}},{id:'A5', dimension:{width:3,height:3}}],
-						[{id:'B1', dimension:{width:3,height:3}},{id:'B2', dimension:{width:3,height:3}},{id:'B3', dimension:{width:3,height:3}},{id:'B4', dimension:{width:3,height:3}},{id:'B5', dimension:{width:3,height:3}}],
-						[{id:'C1', dimension:{width:3,height:3}},{id:'C2', dimension:{width:3,height:3}},{id:'C3', dimension:{width:3,height:3}},{id:'C4', dimension:{width:3,height:3}},{id:'C5', dimension:{width:3,height:3}}],
-						[{id:'D1', dimension:{width:3,height:3}},{id:'D2', dimension:{width:3,height:3}},{id:'D3', dimension:{width:3,height:3}},{id:'D4', dimension:{width:3,height:3}},{id:'D5', dimension:{width:3,height:3}}],
-					]
-				},
-				{   name:'Zone D',
-					Bays:[
-						[{id:'A1', dimension:{width:3,height:3}},{id:'A2', dimension:{width:3,height:3}},{id:'A3', dimension:{width:3,height:3}},{id:'A4', dimension:{width:3,height:3}},{id:'A5', dimension:{width:3,height:3}}],
-						[{id:'B1', dimension:{width:3,height:3}},{id:'B2', dimension:{width:3,height:3}},{id:'B3', dimension:{width:3,height:3}},{id:'B4', dimension:{width:3,height:3}},{id:'B5', dimension:{width:3,height:3}}],
-						[{id:'C1', dimension:{width:3,height:3}},{id:'C2', dimension:{width:3,height:3}},{id:'C3', dimension:{width:3,height:3}},{id:'C4', dimension:{width:3,height:3}},{id:'C5', dimension:{width:3,height:3}}],
-						[{id:'D1', dimension:{width:3,height:3}},{id:'D2', dimension:{width:3,height:3}},{id:'D3', dimension:{width:3,height:3}},{id:'D4', dimension:{width:3,height:3}},{id:'D5', dimension:{width:3,height:3}}],
-					]
-				}
-					]}
 	}
+
 	render() {
 		return (
 			<Container>
@@ -161,39 +128,6 @@ class Designer extends Component {
 
 								</Row>
 							</Alert>
-							{this.state.bays[i.zone].map(z=>{
-								return z.map(a=>{
-
-									return <Accordion>
-											<AccordionPanel label={'Bay: '+a.name}>
-										<Box pad="medium" background="light-2">
-											<text>{a.ySize}  trays high and {a.xSize} trays wide:</text>
-											<Alert  variant={'success'} style={{alignContent:'left'}}>
-												<Row>
-													<Col>
-														<SettingsOption color = "#000066"/>
-													</Col>
-
-													Change The dimensions of this bay
-
-												</Row>
-											</Alert>
-											<Alert  variant={'danger'} style={{alignContent:'left'}}>
-												<Row>
-													<Col>
-														<Trash color = "#000066"/>
-													</Col>
-
-													Delete This Bay
-
-												</Row>
-											</Alert>
-										</Box>
-									</AccordionPanel>
-									</Accordion>
-
-									})
-							})}
 
 
 						</Box>
