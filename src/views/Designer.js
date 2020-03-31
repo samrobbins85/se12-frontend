@@ -61,8 +61,6 @@ class Designer extends Component {
 							});
 			 			x[aLoop.bays[0].zone] =temp1
 			 		});
-			 	console.log(x);
-			 	console.log(zonesList.zones);
 			 	this.state.bays = x;
 			 	this.state.zones = zonesList.zones;
 			 	console.log("Complete");
