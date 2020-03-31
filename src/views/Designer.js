@@ -23,7 +23,8 @@ function getBaysInZone(query) {
 
 
 class Designer extends Component {
-	componentDidMount() {
+	componentWillMount() {
+
 		let zonesList;
 		fetch("http://127.0.0.1:3001/stockTake/getZones", {
 		 method: 'GET',
@@ -48,26 +49,25 @@ class Designer extends Component {
 			 		bayList.push(getBaysInZone(query))
 			 	});
 			 Promise.all(bayList).then((allBayData)=>{
-			 	let result = {};
+			 	let x = {};
 			 	allBayData.forEach(
-			 		(oLoop) => {
-			 			console.log(oLoop);
-			 			let baysInZone = oLoop.bays;
-			 			let baysInZoneProps = {};
-			 			baysInZone.forEach(
-			 				(iLoop) => {
-			 					baysInZoneProps[iLoop.bay] = {xVal:iLoop.xVal , yVal:iLoop.yVal, xSize:iLoop.xSize, ySize:iLoop.ySize, name:iLoop.bay}
+			 		(aLoop) => {
+			 			let temp = aLoop.bays;
+			 			let temp1 = {};
+			 			temp.forEach(
+			 				(loop) => {
+			 					temp1[loop.bay] = {xVal:loop.xVal , yVal:loop.yVal, xSize:loop.xSize, ySize:loop.ySize, name:loop.bay}
 							});
-			 			result[oLoop.bays[0].zone] =baysInZoneProps;
+			 			x[aLoop.bays[0].zone] =temp1
 			 		});
-			 	this.setState({bays: result, zones: zonesList.zones})
+			 	this.setState({bays: x, zones: zonesList.zones});
+			 	console.log("Complete");
 			 });
 		 })
 	}
 
 	constructor(props){
 		super(props);
-
 
 	}
 
