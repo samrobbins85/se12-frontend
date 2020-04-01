@@ -11,6 +11,10 @@
   margin-bottom: 3rem;
 }
 
+.next-steps p {
+  text-align: justify;
+}
+
 @media (max-width: 768px) {
   .next-steps .col-md-5 {
     margin-bottom: 0;
