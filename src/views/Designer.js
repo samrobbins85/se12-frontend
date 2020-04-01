@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Accordion, AccordionPanel, Box, Grommet, Meter, Select, Stack, Text} from "grommet/es6";
+import {Accordion, AccordionPanel, Box, Grommet, Meter, Select, Stack, Text, Layer, Button} from "grommet/es6";
 import {Alert, Col, Container, Jumbotron, Row} from "react-bootstrap";
 import {SettingsOption, Add, Trash, DocumentExcel} from "grommet-icons";
 import {grommet} from "grommet/themes";
@@ -22,42 +22,116 @@ function getBaysInZone(query) {
 	});
 }
 
-function removeZone(zone) {
-	return new Promise((resolve, reject) => {
+
+
+
+
+
+class Designer extends Component {
+	removeZone(zone) {
+		let jsonBuild = {};
+		jsonBuild["zone"] = zone;
+
 		fetch('http://127.0.0.1:3001/stockTake/removeZone', {
 			method: 'POST',
 			mode: 'cors',
 			headers: {
 				'Content-Type': 'application/json'
 			},
-			body: zone
+			body: JSON.stringify(jsonBuild)
 		})
-			.then((resp) => resp.json())
-			.then((data) => {
-				resolve(data)
-			})
-	});
-}
+	}
 
-function removeBay(bay) {
-	return new Promise((resolve, reject) => {
+	removeBay(bay) {
+		let jsonBuild = {};
+		jsonBuild["bay"] = bay;
+
 		fetch('http://127.0.0.1:3001/stockTake/removeBay', {
 			method: 'POST',
 			mode: 'cors',
 			headers: {
 				'Content-Type': 'application/json'
 			},
-			body: bay
+			body: JSON.stringify(jsonBuild)
 		})
-			.then((resp) => resp.json())
-			.then((data) => {
-				resolve(data)
-			})
-	});
-}
+	}
 
+	editZone(zone) {
+		// Currently only able to change zone name
 
-class Designer extends Component {
+		let jsonBuild = {};
+		jsonBuild["zone"] = zone;
+
+		fetch('http://127.0.0.1:3001/stockTake/editZone', {
+			method: 'POST',
+			mode: 'cors',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(jsonBuild)
+		})
+	}
+
+	editBay(bay) {
+		// Currently only able to change zone name
+
+		let jsonBuild = {};
+		// may be obsolete... check again in morning <matt, 1/4/20, 3:57>
+		//jsonBuild["xSize"] = bay["xSize"];
+		//jsonBuild["ySize"] = bay["ySize"];
+		//jsonBuild["bay"] = bay["bay"];
+
+		fetch('http://127.0.0.1:3001/stockTake/editBay', {
+			method: 'POST',
+			mode: 'cors',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(jsonBuild)
+		})
+	}
+
+	addZone(zone) {
+		// Currently only able to change zone name
+
+		let jsonBuild = {};
+		// may be obsolete... check again in morning <matt, 1/4/20, 3:57>
+		//jsonBuild["height"] = zone["height"];
+		//jsonBuild["width"] = zone["width"];
+		//jsonBuild["zone"] = zone["zone"];
+
+		fetch('http://127.0.0.1:3001/stockTake/addZone', {
+			method: 'POST',
+			mode: 'cors',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(jsonBuild)
+		})
+	}
+
+	addBay(zone) {
+		// Currently only able to change zone name
+
+		let jsonBuild = {};
+		// may be obsolete... check again in morning <matt, 1/4/20, 3:57>
+		//jsonBuild["xSize"] = bay[xSize];
+		//jsonBuild["ySize"] = bay[ySize];
+		//jsonBuild["xVal"] = bay[xVal];
+		//jsonBuild["yVal"] = bay[yVal];
+		//jsonBuild["bay"] = bay[bay];
+		//jsonBuild["zone"] = bay[zone];
+
+		fetch('http://127.0.0.1:3001/stockTake/addBay', {
+			method: 'POST',
+			mode: 'cors',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(jsonBuild)
+		})
+	}
+
 	componentDidMount() {
 
 		let zonesList;
@@ -105,10 +179,54 @@ class Designer extends Component {
 	constructor(props){
 		super(props);
 		this.loading = true;
-		this.state = {bays: {}, zones: []};
+		this.state = {bays: {}, zones: [], layerType: undefined, layerArgs: undefined};
+
+		this.removeZone = this.removeZone.bind(this);
+		this.removeBay = this.removeBay.bind(this);
+		this.editZone = this.editZone.bind(this);
+		this.editBay = this.editBay.bind(this);
+		this.addZone = this.addZone.bind(this);
+		this.addBay = this.addBay.bind(this);
 	}
 
 	render() {
+		const ConfirmRemoveZone = ({ onClose }) => (
+		  <Layer position='center' onClickOutside={onClose}>
+			<Box pad='large' gap='medium'>
+			  <Text>Are you sure?</Text>
+			  <Box direction='row' gap='medium' align='center'>
+				<Button label='Yes' onClick={this.removeZone(this.state.layerArgs)} />
+				<Button label='No' primary={true} onClick={onClose} />
+			  </Box>
+			</Box>
+		  </Layer>
+		);
+
+		const ConfirmRemoveBay = ({ onClose }) => (
+		  <Layer position='center' onClickOutside={onClose}>
+			<Box pad='large' gap='medium'>
+			  <Text>Are you sure?</Text>
+			  <Box direction='row' gap='medium' align='center'>
+				<Button label='Yes' onClick={this.removeBay(this.state.layerArgs)} />
+				<Button label='No' primary={true} onClick={onClose} />
+			  </Box>
+			</Box>
+		  </Layer>
+		);
+
+
+    	let layer;
+
+    	if (this.state.layerType === "ConfirmRemoveZone") {
+    		layer = <ConfirmRemoveZone onClose={() => this.setState({layerType: undefined, layerArgs: undefined})} />;
+		}
+    	else if (this.state.layerType === "ConfirmRemoveBay") {
+    		layer = <ConfirmRemoveBay onClose={() => this.setState({layerType: undefined, layerArgs: undefined})} />;
+		}
+    	else {
+    		layer = undefined;
+		}
+
 		if (this.loading){
 			return <Loading/>
 		}else {
@@ -158,7 +276,8 @@ class Designer extends Component {
 													</Row>
 												</Alert>
 												<Alert variant={'danger'} style={{alignContent: 'left'}}>
-													<Row>
+													<Row onClick={() => this.setState({layerType: "ConfirmRemoveZone", layerArgs: i.zone})}>
+
 														<Col>
 															<Trash color="#000066"/>
 														</Col>
@@ -166,6 +285,7 @@ class Designer extends Component {
 														Delete this Zone
 
 													</Row>
+													{layer}
 												</Alert>
 												<Alert variant={'success'} style={{alignContent: 'left'}}>
 													<Row>
@@ -199,7 +319,7 @@ class Designer extends Component {
 																</Alert>
 																<Alert variant={'danger'}
 																	   style={{alignContent: 'left'}}>
-																	<Row>
+																	<Row onClick={() => this.setState({layerType: "ConfirmRemoveBay", layerArgs: z.name})}>
 																		<Col>
 																			<Trash color="#000066"/>
 																		</Col>
