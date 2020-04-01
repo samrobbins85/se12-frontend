@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
-import {Form, FormField, TextInput, Accordion, AccordionPanel, Box, Grommet, Meter, Select, Stack, Text, Layer, Button} from "grommet/es6";
+import {Form, FormField, Accordion, AccordionPanel, Box, Grommet, Meter, Stack, Text, Layer, Button} from "grommet/es6";
 import {Alert, Col, Container, Jumbotron, Row} from "react-bootstrap";
-import {SettingsOption, Add, Trash, DocumentExcel} from "grommet-icons";
+import {SettingsOption, Add, Trash} from "grommet-icons";
 import {grommet} from "grommet/themes";
 import Loading from "../components/Loading";
 
@@ -23,10 +23,6 @@ function getBaysInZone(query) {
 }
 
 
-
-
-
-
 class Designer extends Component {
 	removeZone(zone) {
 		fetch('http://127.0.0.1:3001/stockTake/removeZone', {
@@ -36,7 +32,8 @@ class Designer extends Component {
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify(zone)
-		})
+		});
+		window.location.reload();
 	}
 
 	removeBay(bay) {
@@ -47,7 +44,8 @@ class Designer extends Component {
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify(bay)
-		})
+		});
+		window.location.reload();
 	}
 
 	editZone(zone) {
@@ -62,12 +60,17 @@ class Designer extends Component {
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify(zone)
-		})
+		});
+		window.location.reload();
 	}
 
 	editBay(bay) {
-		bay["height"] = parseInt(bay["height"]);
-		bay["width"] = parseInt(bay["width"]);
+		bay["ySize"] = parseInt(bay["ySize"]);
+		bay["xSize"] = parseInt(bay["xSize"]);
+
+		bay["xVal"] = 0;
+		bay["yVal"] = 0;
+		bay["zone"] = this.state.layerArgs["zone"];
 
 		fetch('http://127.0.0.1:3001/stockTake/editBay', {
 			method: 'POST',
@@ -76,7 +79,8 @@ class Designer extends Component {
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify(bay)
-		})
+		});
+		window.location.reload();
 	}
 
 	addZone(zone) {
@@ -90,18 +94,16 @@ class Designer extends Component {
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify(zone)
-		})
+		});
+		window.location.reload();
 	}
 
 	addBay(bay) {
-		let jsonBuild = {};
-		// may be obsolete... check again in morning <matt, 1/4/20, 3:57>
-		//jsonBuild["xSize"] = bay[xSize];
-		//jsonBuild["ySize"] = bay[ySize];
-		//jsonBuild["xVal"] = bay[xVal];
-		//jsonBuild["yVal"] = bay[yVal];
-		//jsonBuild["bay"] = bay[bay];
-		//jsonBuild["zone"] = bay[zone];
+		bay["ySize"] = parseInt(bay["ySize"]);
+		bay["xSize"] = parseInt(bay["xSize"]);
+
+		bay["xVal"] = 0;
+		bay["yVal"] = 0;
 		bay["zone"] = this.state.layerArgs;
 
 		fetch('http://127.0.0.1:3001/stockTake/addBay', {
@@ -110,8 +112,9 @@ class Designer extends Component {
 			headers: {
 				'Content-Type': 'application/json'
 			},
-			body: JSON.stringify(jsonBuild)
-		})
+			body: JSON.stringify(bay)
+		});
+		window.location.reload();
 	}
 
 	componentDidMount() {
@@ -161,7 +164,7 @@ class Designer extends Component {
 	constructor(props){
 		super(props);
 		this.loading = true;
-		this.state = {bays: {}, zones: [], layerType: undefined, layerArgs: undefined};
+		this.state = {bays: {}, zones: [], layerType: undefined, layerArgs: undefined, reload: false};
 
 		this.removeZone = this.removeZone.bind(this);
 		this.removeBay = this.removeBay.bind(this);
@@ -204,10 +207,11 @@ class Designer extends Component {
 					<Form onSubmit={({ value }) => this.addBay(value)}>
 						<FormField name="bay" label="Bay Name" required={true} />
 
-						<FormField name="height" label="Height" required={true} />
-						<FormField name="width" label="Width" required={true} />
+						<FormField name="ySize" label="Height" required={true} />
+						<FormField name="xSize" label="Width" required={true} />
 
 						<Button type="submit" primary label="Submit" />
+						<Button label='Back' primary={true} onClick={onClose} />
 					</Form>
 				</Box>
 			</Box>
@@ -220,12 +224,13 @@ class Designer extends Component {
 				<Text>Add Zone</Text>
 				<Box>
 					<Form onSubmit={({ value }) => this.addZone(value)}>
-						<FormField name="zone" label="Zone Name" value={this.state.layerArgs["zone"]} required={true} />
+						<FormField name="zone" label="Zone Name" required={true} />
 
-						<FormField type="number" name="height" label="Height" value={this.state.layerArgs["height"]} required={true} />
-						<FormField type="number" name="width" label="Width" value={this.state.layerArgs["width"]} required={true} />
+						<FormField type="number" name="height" label="Height" required={true} />
+						<FormField type="number" name="width" label="Width" required={true} />
 
 						<Button type="submit" primary label="Submit" />
+						<Button label='Back' primary={true} onClick={onClose} />
 					</Form>
 				</Box>
 			</Box>
@@ -238,12 +243,13 @@ class Designer extends Component {
 				<Text>Edit Bay {this.state.layerArgs["bay"]}</Text>
 				<Box>
 					<Form onSubmit={({ value }) => this.editBay(value)}>
-						<FormField name="bay" label="Zone Name" value={this.state.layerArgs["bay"]} required={true} />
+						{/*<FormField name="bay" label="Bay Name" value={this.state.layerArgs["bay"]} required={true} />*/}
 
 						<FormField type="number" name="ySize" label="Height" value={this.state.layerArgs["ySize"]} required={true} />
 						<FormField type="number" name="xSize" label="Width" value={this.state.layerArgs["xSize"]} required={true} />
 
 						<Button type="submit" primary label="Submit" />
+						<Button label='Back' primary={true} onClick={onClose} />
 					</Form>
 				</Box>
 			</Box>
@@ -259,6 +265,7 @@ class Designer extends Component {
 						<FormField name="newname" label="Zone Name" value={this.state.layerArgs["zone"]} required={true} />
 
 						<Button type="submit" primary label="Submit" />
+						<Button label='Back' primary={true} onClick={onClose} />
 					</Form>
 				</Box>
 			</Box>
@@ -371,7 +378,7 @@ class Designer extends Component {
 																</text>
 																<Alert variant={'success'}
 																	   style={{alignContent: 'left'}}>
-																	<Row onClick={() => this.setState({layerType: "DoEditBay", layerArgs: {"bay": z.name, "xSize": z.xSize, "ySize": z.ySize}})}>
+																	<Row onClick={() => this.setState({layerType: "DoEditBay", layerArgs: {"bay": z.name, "zone": i.zone, "xSize": z.xSize, "ySize": z.ySize}})}>
 																		<Col>
 																			<SettingsOption color="#000066"/>
 																		</Col>
@@ -382,7 +389,7 @@ class Designer extends Component {
 																</Alert>
 																<Alert variant={'danger'}
 																	   style={{alignContent: 'left'}}>
-																	<Row onClick={() => this.setState({layerType: "ConfirmRemoveBay", layerArgs: {"bay": z.name}})}>
+																	<Row onClick={() => this.setState({layerType: "ConfirmRemoveBay", layerArgs: {"bay": z.name, "zone": i.zone}})}>
 																		<Col>
 																			<Trash color="#000066"/>
 																		</Col>
