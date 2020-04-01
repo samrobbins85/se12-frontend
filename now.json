@@ -1,6 +1,11 @@
 {
   "version": 2,
   "alias": ["durhamfoodbank.now.sh"],
-  "name": "Durham Foodbank Front End"
+  "name": "Durham Foodbank Front End",
+  "build": {
+    "env": {
+      "CI": "false"
+    }
+  }
 } 
  
