@@ -4,7 +4,7 @@
   "name": "Durham Foodbank Front End",
   "build": {
     "env": {
-      "CI": false
+      "CI": "false"
     }
   }
 } 
