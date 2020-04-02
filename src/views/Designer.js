@@ -179,9 +179,9 @@ class Designer extends Component {
 		const ConfirmRemoveZone = ({ onClose }) => (
 		  <Layer position='center' onClickOutside={onClose}>
 			<Box pad='large' gap='medium'>
-			  <Text>Are you sure?</Text>
+			  <Text>Are you sure? All bays & trays contained within will be deleted!</Text>
 			  <Box direction='row' gap='medium' align='center'>
-				<Button label='Yes' onClick={this.removeZone(this.state.layerArgs)} />
+				<Button label='Yes' onClick={() => {this.removeZone(this.state.layerArgs)}} />
 				<Button label='No' primary={true} onClick={onClose} />
 			  </Box>
 			</Box>
@@ -191,9 +191,9 @@ class Designer extends Component {
 		const ConfirmRemoveBay = ({ onClose }) => (
 		  <Layer position='center' onClickOutside={onClose}>
 			<Box pad='large' gap='medium'>
-				<Text>Are you sure?</Text>
+				<Text>Are you sure? All trays contained within will be deleted!</Text>
 				<Box direction='row' gap='medium' align='center'>
-					<Button label='Yes' onClick={this.removeBay(this.state.layerArgs)} />
+					<Button label='Yes' onClick={() => {this.removeBay(this.state.layerArgs)}} />
 					<Button label='No' primary={true} onClick={onClose} />
 				</Box>
 			</Box>
