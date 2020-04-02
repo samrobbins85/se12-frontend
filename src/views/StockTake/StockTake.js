@@ -4,6 +4,19 @@ import {Col, Container, Jumbotron, Row} from "react-bootstrap";
 import {Box, Button, Menu} from "grommet/es6";
 import Loading from "../../components/Loading";
 
+function findAllCategories(db){
+	// console.log("this is the struct for the databse",db)
+	let cats = []
+	db.forEach((loop)=>{
+		loop.trays.forEach((loop1)=>{
+			if(!cats.includes(loop1.contents)){
+				cats.push(loop1.contents)
+			}
+		})
+	});
+	return cats
+}
+
 function getTraysInBay(query) {
 	return new Promise((resolve, reject) => {
 		fetch('http://127.0.0.1:3001/stockTake/getTraysInBay', {
@@ -71,9 +84,12 @@ class StockTake extends Component {
 					 sevedQuerys.push(getTraysInBay(my_query))
 				 });
 			 Promise.all(sevedQuerys).then((allTrayData)=>{
+			 	console.log(allTrayData)
 				 let fml = {}
 				 for (let loop = 0; loop < allTrayData.length; loop++){
-				 	fml[allTrayData[loop].trays[0].zone + "-" + allTrayData[loop].trays[0].bay] = allTrayData[loop].trays
+				 	if (allTrayData[loop].trays.length > 0) {
+						fml[allTrayData[loop].trays[0].zone + "-" + allTrayData[loop].trays[0].bay] = allTrayData[loop].trays
+					}
 				 }
 				 let sevedQuerys1 = [];
 				 querys1.forEach(
@@ -91,6 +107,7 @@ class StockTake extends Component {
 					 	x[aLoop.bays[0].zone] =temp1
 					 });
 					 this.loading = false;
+					 this.categories = findAllCategories(allTrayData);
 					 this.setState({bays: x, zones: fuckReact.zones, db: fml, selected: {zone: 0, bay: 0}})
 				 })
 			 })
@@ -104,6 +121,7 @@ class StockTake extends Component {
 	 constructor(props) {
 		 super(props);
 		 this.loading = true
+		 this.categories = []
 		 this.undoRedo = {head: 0 , stack:[]}
 		 this.state = {selected: {zone: 0, bay: 0}, zones: [
 				 {
@@ -255,7 +273,7 @@ class StockTake extends Component {
 								{/*<BayView db={this.state.db[ this.state.zones[this.state.selected.zone].zone + "-" + this.state.zones[this.state.selected.zone].bays[this.state.selected.bay]]}*/}
 								<BayView dimensons = {this.state.bays === undefined ? NaN : this.state.bays[ this.state.zones[this.state.selected.zone].zone ][ this.state.zones[this.state.selected.zone].bays[this.state.selected.bay]]} db={this.state.db[this.state.zones[this.state.selected.zone].zone + "-" + this.state.zones[this.state.selected.zone].bays[this.state.selected.bay]]} quer = {this.state.zones[this.state.selected.zone].zone + "-" + this.state.zones[this.state.selected.zone].bays[this.state.selected.bay]}
 
-										 parentCallback={this.callbackFunction}/>
+										 parentCallback={this.callbackFunction} categories = {this.categories}/>
 							</Col>
 							<Col md={{span: 2, offset: 14}}>
 								<Box align="center" height="60px" width="130px">

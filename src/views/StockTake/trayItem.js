@@ -44,21 +44,19 @@ class TrayItem extends Component {
 	render() {
 
 		return (
-			<div style={this.state.selected === true ? {borderRadius:'10px',borderStyle: 'solid', borderColor:'#2196f3'}:{}}>
-			<Card onClick={this.handleClick} >
+			// <div style={this.state.selected === true ? {borderRadius:'10px',borderStyle: 'solid', borderColor:'#2196f3'}:{}}>
+			<div style={{padding:"5px"}}>
+			<Card onClick={this.handleClick} style={{ width: `${this.props.width}rem`, overflow: "auto"}} border={this.state.selected === true ? "primary":"light"}>
+
+					<Card.Header>{this.props.i.contents}</Card.Header>
 				<Card.Body >
-					<Card.Title>{this.props.i.contents}</Card.Title>
 					<Card.Text>
-						<div> <Badge variant="light"> Weight:{this.props.i.weight == null ? 'N/A':this.props.i.weight} kg</Badge></div>
-						{/*<div> <Badge variant={this.props.y< ((parseInt(this.props.i.expiry.slice((this.props.i.expiry.length -4),this.props.i.expiry.length))) - 1900) ? (this.props.y< ((parseInt(this.props.i.expiry.slice((this.props.i.expiry.length -4),this.props.i.expiry.length))) - 1901)  ? "success":"warning"):"danger"}> Expires: {this.props.i.expiry}</Badge></div>*/}
-						<div> <Badge variant={(parseInt( this.props.i.expiry.split("/").length > 1 ? this.props.i.expiry.split("/")[1]:this.props.i.expiry.split("/")[0] ) > 2021 ? "success" : (  parseInt( this.props.i.expiry.split("/").length > 1 ? this.props.i.expiry.split("/")[1]:this.props.i.expiry.split("/")[0] ) < 2021 ? "danger":"warning") )}> Expires: {this.props.i.expiry}</Badge></div>
-
-
+						Weight:
+						<div> <Badge variant="light"> {this.props.i.weight == null ? 'N/A':this.props.i.weight} kg</Badge></div>
+						Expires:
+						<div> <Badge variant={(parseInt( this.props.i.expiry.split("/").length > 1 ? this.props.i.expiry.split("/")[1]:this.props.i.expiry.split("/")[0] ) > 2021 ? "success" : (  parseInt( this.props.i.expiry.split("/").length > 1 ? this.props.i.expiry.split("/")[1]:this.props.i.expiry.split("/")[0] ) < 2021 ? "danger":"warning") )}>  {this.props.i.expiry}</Badge></div>
 					</Card.Text>
 				</Card.Body>
-				<Card.Footer>
-					<small className="text-muted">Last Counted: 1 week ago</small>
-				</Card.Footer>
 			</Card>
 			</div>
 

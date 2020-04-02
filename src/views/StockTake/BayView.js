@@ -33,7 +33,7 @@ class BayView extends Component {
 		for (let loop = 0; loop < this.props.db.length; loop++){
 			this.selectedList.push(false)
 		}
-		this.categories = ['Tinned Fruit', 'Tinned Beans', 'Tinned Soup', 'Tinned Sauce', 'Cereal', 'Pasta', 'Juice', 'Milk', 'Toiletries', 'Nappies', 'Feminine Products', 'Cleaning Products']
+		// this.categories = ['Tinned Fruit', 'Tinned Beans', 'Tinned Soup', 'Tinned Sauce', 'Cereal', 'Pasta', 'Juice', 'Milk', 'Toiletries', 'Nappies', 'Feminine Products', 'Cleaning Products']
 	}
 	componentWillReceiveProps(nextProps, nextContext) {
 			console.log("componentWillReceiveProps says current props are: ", this.props)
@@ -56,6 +56,7 @@ class BayView extends Component {
 	}
 
 	performCategoryChange = (ef) => {
+		console.log("desired category is:", ef)
 		if (this.selectedList.includes(true)) {
 			let temp1 = [];
 			for (let y = 0; y < this.props.db.length; y++) {
@@ -130,9 +131,9 @@ class BayView extends Component {
 				{/*Here is the The box containing the Trays*/}
 
 				<div style={{background: '#f4f4f4', padding: '20px', borderRadius: '20px'}}>
-					<CardDeck style={{padding: '20px'}}>
+					<CardDeck style={{paddingTop: '20px'}}>
 					{this.props.db.map(z => {
-						return <TrayItem i={z} y={this.y} parentCallback={this.callbackFunction} selected = {this.state.selectAll}/>
+						return <TrayItem i={z} y={this.y} parentCallback={this.callbackFunction} selected = {this.state.selectAll} width = {30/this.props.dimensons.xSize}/>
 					})}
 					</CardDeck>
 				</div>
@@ -144,7 +145,7 @@ class BayView extends Component {
 						<Container>
 							<Row>
 								<Col>
-									<Box align="center" height="60px">
+									<Box align="center" style={{paddingTop: '10px'}}>
 										<Button label="Select All" fill onClick={() => {
 
 											for (let loop = 0; loop < this.props.db.length; loop++){
@@ -156,26 +157,31 @@ class BayView extends Component {
 									</Box>
 								</Col>
 								<Col>
-									<Box align="center" height="60px">
-										<Button label="Copy" fill onClick={() => {
-										}}/>
-									</Box>
-								</Col>
-								<Col>
-									<Box align="center" height="60px">
-										<Button label="Paste" fill onClick={() => {
-										}}/>
-									</Box>
-								</Col>
-								<Col>
-									<Box align="center" height="60px">
-										<Button label="Move" fill onClick={() => {
-										}}/>
-									</Box>
-								</Col>
-								<Col>
-									<Box align="center" height="60px">
+									<Box align="center" style={{paddingTop: '10px'}}>
 										<Button label="Swap" fill onClick={() => {
+
+											let loc = [];
+											this.selectedList.forEach((loop,ind)=>{
+												if (loop === true){
+													loc.push(ind)
+												}
+											});
+											if(loc.length === 2){
+												let temp = [];
+												for (let y = 0; y < this.props.db.length; y++) {
+													temp.push(this.props.db[y]);
+												}
+												let cpy0 = temp[loc[0]], cpy1 = temp[loc[1]];
+												temp[loc[0]] = cpy1;
+												temp[loc[1]] = cpy0;
+												temp[loc[0]].tray = cpy0.tray;
+												temp[loc[1]].tray = cpy1.tray;
+
+												this.sendData({x: temp})
+											}else{
+												alert("You can only swap TWO trays within the same bay.")
+											}
+
 										}}/>
 									</Box>
 								</Col>
@@ -205,9 +211,17 @@ class BayView extends Component {
 						<Tabs>
 							<Tab title={<RichTabTitle icon={<Cafeteria color="#f44336"/>} label="Category"/>}>
 								<Container>
-									<CategoryButtons categories={this.categories}
+									<CategoryButtons categories={this.props.categories}
 									                 parentCallback={this.performCategoryChange}/>
 								</Container>
+								<Form
+									onReset={event => console.log(event)}
+									onSubmit={({value}) => this.performCategoryChange(value)}>
+									<FormField label="Custom Category" name="id"/>
+									<Box direction="row" justify="between" margin={{top: 'medium'}}>
+										<Button type="submit" label="Set" primary/>
+									</Box>
+								</Form>
 							</Tab>
 							<Tab title={<RichTabTitle icon={<Schedule color="#f44336"/>} label="Expiry"/>}>
 								<Container>
