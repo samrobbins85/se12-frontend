@@ -71,6 +71,7 @@ class Designer extends Component {
 		bay["xVal"] = 0;
 		bay["yVal"] = 0;
 		bay["zone"] = this.state.layerArgs["zone"];
+		bay["bay"] = this.state.layerArgs["bay"];
 
 		fetch('http://127.0.0.1:3001/stockTake/editBay', {
 			method: 'POST',
