@@ -36,6 +36,10 @@ class BayView extends Component {
 		// this.categories = ['Tinned Fruit', 'Tinned Beans', 'Tinned Soup', 'Tinned Sauce', 'Cereal', 'Pasta', 'Juice', 'Milk', 'Toiletries', 'Nappies', 'Feminine Products', 'Cleaning Products']
 	}
 	componentWillReceiveProps(nextProps, nextContext) {
+		this.selectedList = [];
+		for (let loop = 0; loop < nextProps.length; loop++){
+			this.selectedList.push(false)
+		}
 			console.log("componentWillReceiveProps says current props are: ", this.props)
 			console.log("componentWillReceiveProps says new props are: ", nextProps)
 	}
@@ -53,6 +57,7 @@ class BayView extends Component {
 		// console.log("componentDidUpdate said current props are: ",this.props)
 
 		this.prevstate = {x:prevProps.db};
+
 	}
 
 	performCategoryChange = (ef) => {
@@ -132,8 +137,8 @@ class BayView extends Component {
 
 				<div style={{background: '#f4f4f4', padding: '20px', borderRadius: '20px'}}>
 					<CardDeck style={{paddingTop: '20px'}}>
-					{this.props.db.map(z => {
-						return <TrayItem i={z} y={this.y} parentCallback={this.callbackFunction} selected = {this.state.selectAll} width = {30/this.props.dimensons.xSize}/>
+					{this.props.db.map((z,loop) => {
+						return <TrayItem i={z} y={this.y} parentCallback={this.callbackFunction} selected = {this.selectedList[loop]} width = {30/this.props.dimensons.xSize}/>
 					})}
 					</CardDeck>
 				</div>
@@ -149,7 +154,7 @@ class BayView extends Component {
 										<Button label="Select All" fill onClick={() => {
 
 											for (let loop = 0; loop < this.props.db.length; loop++){
-													this.selectedList[loop] = !this.selectedList[loop]
+													this.selectedList[loop] = !this.state.selectAll
 											}
 											this.setState({selectAll:!this.state.selectAll})
 
