@@ -437,26 +437,6 @@ class Designer extends Component {
 
 								</Row>
 							</Alert>
-							<Grommet theme={grommet}>
-								<Box align="center" pad="large">
-									<Stack anchor="center">
-										<Meter
-											type="circle"
-											background="light-4"
-											values={[{value: 30}]}
-											size="small"
-											thickness="medium"
-										/>
-										<Box direction="row" align="center" pad={{bottom: "medium"}}>
-											<Text size="xlarge" weight="bold">
-												{30}
-											</Text>
-											<Text size="small">% </Text>
-										</Box>
-									</Stack> <Text weight="bold" size="small"
-												   style={{textAlign: '-webkit-center'}}> Vacant, 338 free of 1125
-									spaces left. </Text>
-								</Box></Grommet>
 
 
 						</Col>
