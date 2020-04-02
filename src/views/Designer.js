@@ -427,18 +427,6 @@ class Designer extends Component {
 
 								</Row>
 							</Alert>
-							<Alert variant={'danger'} style={{alignContent: 'left'}}>
-								<Row>
-									<Col>
-										<Add color="#000066"/>
-									</Col>
-
-									Download Previous stock takes from
-
-								</Row>
-							</Alert>
-
-
 						</Col>
 					</Row>
 				</Container>
