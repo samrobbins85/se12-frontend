@@ -6,7 +6,7 @@ import Loading from "../../components/Loading";
 
 function findAllCategories(db){
 	// console.log("this is the struct for the databse",db)
-	let cats = []
+	let cats = ["N/A"]
 	db.forEach((loop)=>{
 		loop.trays.forEach((loop1)=>{
 			if(!cats.includes(loop1.contents)){
