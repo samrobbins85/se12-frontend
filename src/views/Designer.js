@@ -183,8 +183,6 @@ class Designer extends Component {
                         });
 
                     Promise.all(traySearches).then((allTrayData) => {
-                        let y = {};
-
                         allTrayData.forEach(
                             (aLoop) => {
                                 let temp = aLoop.trays;
