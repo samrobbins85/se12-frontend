@@ -22,6 +22,23 @@ function getBaysInZone(query) {
     });
 }
 
+function getTraysInBay(query) {
+    return new Promise((resolve, reject) => {
+        fetch('http://127.0.0.1:3001/stockTake/getTraysInBay', {
+            method: 'POST',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(query)
+        })
+            .then((resp) => resp.json())
+            .then((data) => {
+                resolve(data)
+            })
+    });
+}
+
 
 class Designer extends Component {
     removeZone(zone) {
@@ -138,6 +155,8 @@ class Designer extends Component {
                 }
 
                 let bayList = [];
+                let trayList = [];
+                let traySearches = [];
 
                 bayQuerys.forEach(
                     (query) => {
@@ -158,12 +177,37 @@ class Designer extends Component {
                                         xSize: loop.xSize,
                                         ySize: loop.ySize
                                     });
+                                    traySearches.push(getTraysInBay({"zone": aLoop.bays[0].zone, "bay": loop.bay}));
                                 });
                             x[aLoop.bays[0].zone] = temp1;
                         });
 
-                    this.loading = false;
-                    this.setState({bays: x, zones: zonesList});
+                    Promise.all(traySearches).then((allTrayData) => {
+                        let y = {};
+
+                        allTrayData.forEach(
+                            (aLoop) => {
+                                let temp = aLoop.trays;
+                                let temp1 = [];
+                                temp.forEach(
+                                    (loop) => {
+                                        trayList.push(loop.contents)
+                                    });
+                            }
+                        );
+
+                        this.loading = false;
+                        this.numTrays = trayList.length;
+                        this.numEmpty = 0;
+
+                        for (let trayCount = 0; trayCount < this.numTrays; trayCount++) {
+                            if (trayList[trayCount] === "EMPTY") {
+                                this.numEmpty++;
+                            }
+                        }
+
+                        this.setState({bays: x, zones: zonesList});
+                    });
                 });
             })
     }
@@ -454,6 +498,26 @@ class Designer extends Component {
 
                                 </Row>
                             </Alert>
+							<Grommet theme={grommet}>
+								<Box align="center" pad="large">
+									<Stack anchor="center">
+										<Meter
+											type="circle"
+											background="light-4"
+											values={[{value: ((this.numTrays - this.numEmpty )/ this.numTrays) * 100}]}
+											size="small"
+											thickness="medium"
+										/>
+										<Box direction="row" align="center" pad={{bottom: "medium"}}>
+											<Text size="xlarge" weight="bold">
+												{(((this.numTrays - this.numEmpty )/ this.numTrays) * 100).toString().slice(0, 4)}
+											</Text>
+											<Text size="small">% </Text>
+										</Box>
+									</Stack> <Text weight="bold" size="small"
+												   style={{textAlign: '-webkit-center'}}> Vacant, {this.numEmpty} free of {this.numTrays} spaces left. </Text>
+								</Box>
+							</Grommet>
                         </Col>
                     </Row>
                 </Container>
