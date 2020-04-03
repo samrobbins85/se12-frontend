@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Alert, Col, Container, Jumbotron, Row, Table, Button} from "react-bootstrap";
-import {Accordion, AccordionPanel, Box, Select, Meter, Stack, Text, Grommet, Menu} from "grommet/es6";
+import {Accordion, AccordionPanel, Box, Select, Meter, Stack, Text, Grommet, Menu, DataTable} from "grommet/es6";
 import {DocumentExcel} from "grommet-icons";
 import {grommet} from "grommet/themes";
 import index from "styled-components/dist/styled-components-macro.esm";
@@ -215,7 +215,22 @@ class Reports extends Component {
                                 this.zoneWeights = zoneWeight(allTrayData, fuckReact.zones, x);
                                 this.fullDB = fml
                                 this.downloadDB()
-                                this.setState({bays: x, zones: fuckReact.zones, db: fml})
+
+                                // nextExpiring
+                                fetch('http://127.0.0.1:3001/stockTake/nextExpiring', {
+                                    method: 'POST',
+                                    mode: 'cors',
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({n: this.totalEmpty.total})
+                                })
+                                    .then((resp) => resp.json())
+                                    .then((resp) => {
+
+                                        this.setState({bays: x, zones: fuckReact.zones, db: fml, sortedDB: resp.trays ,selectedSorted:"None"})
+
+                                    })
                             })
                         })
                     })
@@ -252,6 +267,22 @@ class Reports extends Component {
             })
 
     }
+    fetchSortedDB(cat){
+        fetch('http://127.0.0.1:3001/stockTake/nextExpiring', {
+            method: 'POST',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({contents:cat ,n:this.totalEmpty.total})
+        })
+            .then((resp) => resp.json())
+            .then((data) => {
+                console.log("we just got this back", data)
+                this.setState({sortedDB:data.trays,selectedSorted:cat})
+            })
+
+    }
 
 
     render() {
@@ -259,7 +290,6 @@ class Reports extends Component {
         if (this.loading) {
             return <Loading/>
         } else {
-
             return (
                 <Container>
                     <Row>
@@ -273,18 +303,19 @@ class Reports extends Component {
                                 <Jumbotron>
                                     <Container>
                                         <h1>Reports</h1>
-                                        <p>
-                                            Here you will be able to download the stock take counts.
-                                        </p>
                                     </Container>
                                 </Jumbotron>
-
+                                <Row>
+                                    <h3>
+                                        Sorted by Location
+                                    </h3>
+                                </Row>
                                 <Row>
                                     <Col>
                                         <Alert variant={'info'} style={{alignContent: 'left'}}>
                                             <Row>
                                                 <Col>
-                                                    <h3>Filter by</h3>
+                                                    <h3>Search by</h3>
                                                 </Col>
                                                 <Col>
                                                     <Menu
@@ -412,7 +443,7 @@ class Reports extends Component {
                             <li style={{color: '#ffffff'}}>Hello World</li>
 
                             <li style={{color: '#ffffff'}}>Hello World</li>
-                            <Alert variant={'success'} style={{alignContent: 'left'}}>
+                            <Alert variant={'danger'} style={{alignContent: 'left'}}>
                                 <Row>
                                     <Col>
                                         <Row>
@@ -430,11 +461,11 @@ class Reports extends Component {
 
                                 </Row>
                                 <Row>
-                                    This will save this report in our database to be accessed later.
+                                    This will save this report in our database to be accessed later (This cannot be reversed).
                                 </Row>
                             </Alert>
 
-                            <Alert variant={'info'} style={{alignContent: 'left'}}>
+                            <Alert variant={'warning'} style={{alignContent: 'left'}}>
                                 <Row>
                                     <Col>
                                         <Row>
@@ -498,10 +529,74 @@ class Reports extends Component {
                                             <Text size="small">% </Text>
                                         </Box>
                                     </Stack> <Text weight="bold" size="small" style={{textAlign: '-webkit-center'}}>Trays
-                                    occupied spaces </Text>
+                                    occupied </Text>
                                 </Box></Grommet>
 
 
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            <h2>
+                                Sorted by expiry Date
+                            </h2>
+                        </Col>
+
+
+                        <Col>
+                            <Alert variant={'info'} style={{alignContent: 'left'}}>
+                                <Row>
+                                    <Col>
+                                        <h3>Search by</h3>
+                                    </Col>
+                                    <Col>
+                                        <Menu
+                                            label={this.state.selectedSorted}
+                                            items={this.categories.map((z) => {
+                                                return {
+                                                    label: z, onClick: () => {
+
+                                                        this.fetchSortedDB(z)
+
+                                                    }
+                                                }
+                                            })}
+                                        />
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    Show only trays with the selected category, or select None to show all
+                                    trays.
+                                </Row>
+                            </Alert>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+
+                            <Box align='center'>
+                                <DataTable resizeable='true' sortable='true' size='small' columns={[
+                                    {
+                                        property: 'contents',
+                                        header: <Text>Category</Text>,
+                                        primary: true,
+                                    },
+                                    {
+                                        property: 'expiry',
+                                        header: 'Expiry',
+                                    },
+                                    {
+                                        property: 'weight',
+                                        header: 'Weight',
+                                    },
+                                    {
+                                        property: 'zone',
+                                        header: 'Zone',
+                                    }, {
+                                        property: 'bay',
+                                        header: 'Bay',
+                                    }]} data={this.state.sortedDB}/>
+                            </Box>
                         </Col>
                     </Row>
                 </Container>

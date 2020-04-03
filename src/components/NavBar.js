@@ -52,30 +52,6 @@ const NavBar = () => {
                 <a className="nav-link" href="https://se-docs.netlify.com/">Docs</a>
               </NavItem>
               {isAuthenticated && (
-              <NavItem>
-                <NavLink
-                    tag={RouterNavLink}
-                    to="/dashboard"
-                    exact
-                    activeClassName="router-link-exact-active"
-                >
-                  Dashboard
-                </NavLink>
-              </NavItem>
-              )}
-              {isAuthenticated && (
-                  <NavItem>
-                    <NavLink
-                        tag={RouterNavLink}
-                        to="/orders"
-                        exact
-                        activeClassName="router-link-exact-active"
-                    >
-                      Orders
-                    </NavLink>
-                  </NavItem>
-              )}
-              {isAuthenticated && (
                   <NavItem>
                     <NavLink
                         tag={RouterNavLink}
