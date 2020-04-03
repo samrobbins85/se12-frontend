@@ -1,6 +1,6 @@
 import React, {Component, useState} from 'react';
 import {Button} from 'grommet';
-import {Deploy, Services, Deliver, Analytics, User, Home} from 'grommet-icons';
+import {Deploy, Services, Notes, Analytics, User, Home} from 'grommet-icons';
 import SideNav, {NavItem, NavIcon, NavText} from '@trendmicro/react-sidenav';
 import '../react-sidenav.css';
 
@@ -54,6 +54,14 @@ const CustomSideBar = () => {
                             Home
                         </NavLink>
 
+                    </NavText>
+                </NavItem>
+                <NavItem eventKey="docs" href={"https://se-docs.netlify.com/" }>
+                    <NavIcon>
+                        <Button  href={"https://se-docs.netlify.com/" } icon={<Notes color="#ffffff"/>} style={{fontSize: '1.75em'}}/>
+                    </NavIcon>
+                    <NavText>
+                        <a  href={"https://se-docs.netlify.com/" }>Documentation</a>
                     </NavText>
                 </NavItem>
                 {isAuthenticated && (
