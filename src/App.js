@@ -5,16 +5,16 @@ import {Box, Grommet, ResponsiveContext,} from 'grommet';
 import './auth0.css';
 import PrivateRoute from "./components/PrivateRoute";
 import Loading from "./components/Loading";
-import NavBar from "./components/NavBar";
+// import NavBar from "./components/NavBar";
 import Footer from "./components/Footer";
 import Home from "./views/Home";
 import Profile from "./views/Profile";
-import Dashboard from "./views/Dashboard";
-import Orders from "./views/Orders";
 import Designer from "./views/Designer";
 import Reports from "./views/Reports";
 import StockTake from "./views/StockTake/StockTake";
-
+import './react-sidenav.css';
+import CustomSideBar from './components/CustomSideBar'
+import TopBar from './components/TopBar'
 import { useAuth0 } from "./react-auth0-spa";
 import history from "./utils/history";
 
@@ -51,13 +51,13 @@ const App = () => {
     <Router history={history}>
       <Grommet theme={theme} full>
       <div id="app" className="d-flex flex-column h-100">
-        <NavBar />
+        <CustomSideBar/>
+        <TopBar/>
+        {/*<NavBar/>*/}
         <Container className="flex-grow-1 mt-5">
           <Switch>
             <Route path="/" exact component={Home} />
             <PrivateRoute path="/profile" component={Profile} />
-            <PrivateRoute path="/dashboard" component={Dashboard} />
-            <PrivateRoute path="/orders" component={Orders} />
             <PrivateRoute path="/designer" component={Designer} />
             <PrivateRoute path="/reports" component={Reports} />
             <PrivateRoute path="/stocktake" component={StockTake} />
