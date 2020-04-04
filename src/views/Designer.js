@@ -7,11 +7,12 @@ import Loading from "../components/Loading";
 
 function getBaysInZone(query) {
     return new Promise((resolve, reject) => {
-        fetch('http://127.0.0.1:3001/stockTake/getBaysInZone', {
+        fetch('https://software-engineering-12.herokuapp.com/stockTake/getBaysInZone', {
             method: 'POST',
             mode: 'cors',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': 'YWxhZGRpbjpvcGVuc2VzYW1l'
             },
             body: JSON.stringify(query)
         })
@@ -24,11 +25,12 @@ function getBaysInZone(query) {
 
 function getTraysInBay(query) {
     return new Promise((resolve, reject) => {
-        fetch('http://127.0.0.1:3001/stockTake/getTraysInBay', {
+        fetch('https://software-engineering-12.herokuapp.com/stockTake/getTraysInBay', {
             method: 'POST',
             mode: 'cors',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': 'YWxhZGRpbjpvcGVuc2VzYW1l'
             },
             body: JSON.stringify(query)
         })
@@ -42,11 +44,12 @@ function getTraysInBay(query) {
 
 class Designer extends Component {
     removeZone(zone) {
-        fetch('http://127.0.0.1:3001/stockTake/removeZone', {
+        fetch('https://software-engineering-12.herokuapp.com/stockTake/removeZone', {
             method: 'POST',
             mode: 'cors',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': 'YWxhZGRpbjpvcGVuc2VzYW1l'
             },
             body: JSON.stringify(zone)
         });
@@ -54,11 +57,12 @@ class Designer extends Component {
     }
 
     removeBay(bay) {
-        fetch('http://127.0.0.1:3001/stockTake/removeBay', {
+        fetch('https://software-engineering-12.herokuapp.com/stockTake/removeBay', {
             method: 'POST',
             mode: 'cors',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': 'YWxhZGRpbjpvcGVuc2VzYW1l'
             },
             body: JSON.stringify(bay)
         });
@@ -70,11 +74,12 @@ class Designer extends Component {
         zone["zone"] = this.state.layerArgs["zone"];
         console.log(zone);
 
-        fetch('http://127.0.0.1:3001/stockTake/editZone', {
+        fetch('https://software-engineering-12.herokuapp.com/stockTake/editZone', {
             method: 'POST',
             mode: 'cors',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': 'YWxhZGRpbjpvcGVuc2VzYW1l'
             },
             body: JSON.stringify(zone)
         });
@@ -90,11 +95,12 @@ class Designer extends Component {
         bay["zone"] = this.state.layerArgs["zone"];
         bay["bay"] = this.state.layerArgs["bay"];
 
-        fetch('http://127.0.0.1:3001/stockTake/editBay', {
+        fetch('https://software-engineering-12.herokuapp.com/stockTake/editBay', {
             method: 'POST',
             mode: 'cors',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': 'YWxhZGRpbjpvcGVuc2VzYW1l'
             },
             body: JSON.stringify(bay)
         });
@@ -105,11 +111,12 @@ class Designer extends Component {
         zone["height"] = parseInt(zone["height"]);
         zone["width"] = parseInt(zone["width"]);
 
-        fetch('http://127.0.0.1:3001/stockTake/addZone', {
+        fetch('https://software-engineering-12.herokuapp.com/stockTake/addZone', {
             method: 'POST',
             mode: 'cors',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': 'YWxhZGRpbjpvcGVuc2VzYW1l'
             },
             body: JSON.stringify(zone)
         });
@@ -128,7 +135,8 @@ class Designer extends Component {
             method: 'POST',
             mode: 'cors',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': 'YWxhZGRpbjpvcGVuc2VzYW1l'
             },
             body: JSON.stringify(bay)
         });
