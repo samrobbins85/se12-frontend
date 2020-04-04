@@ -131,7 +131,7 @@ class Designer extends Component {
         bay["yVal"] = 0;
         bay["zone"] = this.state.layerArgs;
 
-        fetch('http://127.0.0.1:3001/stockTake/addBay', {
+        fetch('https://software-engineering-12.herokuapp.com/stockTake/addBay', {
             method: 'POST',
             mode: 'cors',
             headers: {

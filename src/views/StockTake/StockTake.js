@@ -19,11 +19,12 @@ function findAllCategories(db) {
 
 function getTraysInBay(query) {
     return new Promise((resolve, reject) => {
-        fetch('http://127.0.0.1:3001/stockTake/getTraysInBay', {
+        fetch('https://software-engineering-12.herokuapp.com/stockTake/getTraysInBay', {
             method: 'POST',
             mode: 'cors',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': 'YWxhZGRpbjpvcGVuc2VzYW1l'
             },
             body: JSON.stringify(query)
         })
@@ -36,11 +37,12 @@ function getTraysInBay(query) {
 
 function getBaysInZone(query) {
     return new Promise((resolve, reject) => {
-        fetch('http://127.0.0.1:3001/stockTake/getBaysInZone', {
+        fetch('https://software-engineering-12.herokuapp.com/stockTake/getBaysInZone', {
             method: 'POST',
             mode: 'cors',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': 'YWxhZGRpbjpvcGVuc2VzYW1l'
             },
             body: JSON.stringify(query)
         })
@@ -56,11 +58,12 @@ class StockTake extends Component {
     componentDidMount() {
 
         let fuckReact;
-        fetch("http://127.0.0.1:3001/stockTake/getZones", {
+        fetch("https://software-engineering-12.herokuapp.com/stockTake/getZones", {
             method: 'GET',
             mode: 'cors',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': 'YWxhZGRpbjpvcGVuc2VzYW1l'
             }
         })
             .then(res => res.json())
@@ -188,11 +191,12 @@ class StockTake extends Component {
         temp[childData.target.zone + "-" + childData.target.bay] = childData.newstate;
         for (let loop = 0; loop < childData.newstate.length; loop++) {
 
-            fetch('http://127.0.0.1:3001/stockTake/editTray', {
+            fetch('https://software-engineering-12.herokuapp.com/stockTake/editTray', {
                 method: 'POST',
                 mode: 'cors',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': 'YWxhZGRpbjpvcGVuc2VzYW1l'
                 },
                 body: JSON.stringify({
                     "zone": childData.target.zone,
