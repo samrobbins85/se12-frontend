@@ -138,11 +138,13 @@ class Designer extends Component {
     componentDidMount() {
 
         let zonesList;
-        fetch("http://127.0.0.1:3001/stockTake/getZones", {
+        fetch("https://software-engineering-12.herokuapp.com/stockTake/getZones", {
             method: 'GET',
             mode: 'cors',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': 'YWxhZGRpbjpvcGVuc2VzYW1l'
+
             }
         })
             .then(res => res.json())
