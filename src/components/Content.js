@@ -18,24 +18,6 @@ class Content extends Component {
             <p>This will take you offsite to a website containing the documentation behind this site. This link is particularly useful if you are a developer or are seeking to make changes to the system</p>
           </Col>
 
-          <Col key = {2} md={5} className="mb-4">
-            <h6 className="mb-3">
-              <a href="/dashboard">
-                  <FontAwesomeIcon icon="link" className="mr-2" />
-                  Dashboard
-                </a></h6>
-            <p>The dashboard contains a quick overview of the current stock and provides key information such as number of trays expiring soon and scheduled deliveries and stock takes.</p>
-          </Col>
-
-          <Col key = {3} md={5} className="mb-4">
-            <h6 className="mb-3">
-              <a href="/orders">
-                  <FontAwesomeIcon icon="link" className="mr-2" />
-                  Orders
-                </a></h6>
-            <p>The orders page details what other sites have ordered from your site from their own portals</p>
-          </Col>
-
           <Col key = {4} md={5} className="mb-4">
             <h6 className="mb-3">
               <a href="/designer">

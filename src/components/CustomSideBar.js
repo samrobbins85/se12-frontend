@@ -42,7 +42,14 @@ const CustomSideBar = () => {
             <SideNav.Nav defaultSelected="home">
                 <NavItem eventKey="home">
                     <NavIcon>
+                        <NavLink
+                            tag={RouterNavLink}
+                            to="/"
+                            exact
+                            activeClassName="router-link-exact-active"
+                        >
                         <Button icon={<Home color="#ffffff"/>} style={{fontSize: '1.75em'}}/>
+                        </NavLink>
                     </NavIcon>
                     <NavText>
                         <NavLink
@@ -58,8 +65,14 @@ const CustomSideBar = () => {
                 </NavItem>
                 <NavItem eventKey="docs" href={"https://se-docs.netlify.com/" }>
                     <NavIcon>
+                        <NavLink
+                            to="https://se-docs.netlify.com/"
+                            exact
+                            activeClassName="router-link-exact-active"
+                        >
                         <Button  href={"https://se-docs.netlify.com/" } icon={<Notes color="#ffffff"/>} style={{fontSize: '1.75em'}}/>
-                    </NavIcon>
+                        </NavLink>
+                        </NavIcon>
                     <NavText>
                         <a  href={"https://se-docs.netlify.com/" }>Documentation</a>
                     </NavText>
@@ -67,7 +80,14 @@ const CustomSideBar = () => {
                 {isAuthenticated && (
                     <NavItem eventKey="stock_take">
                         <NavIcon>
+                            <NavLink
+                                tag={RouterNavLink}
+                                to="/stocktake"
+                                exact
+                                activeClassName="router-link-exact-active"
+                            >
                             <Button icon={<Deploy color="#ffffff"/>} style={{fontSize: '1.75em'}}/>
+                            </NavLink>
                         </NavIcon>
                         <NavText>
                             <NavLink
@@ -85,7 +105,14 @@ const CustomSideBar = () => {
                     <NavItem eventKey="settings">
 
                         <NavIcon>
+                            <NavLink
+                                tag={RouterNavLink}
+                                to="/designer"
+                                exact
+                                activeClassName="router-link-exact-active"
+                            >
                             <Button icon={<Services color="#ffffff"/>} style={{fontSize: '1.75em'}}/>
+                            </NavLink>
                         </NavIcon>
                         <NavText>
                             <NavLink
@@ -103,7 +130,14 @@ const CustomSideBar = () => {
                 {isAuthenticated && (
                     <NavItem eventKey="reports">
                         <NavIcon>
+                            <NavLink
+                                tag={RouterNavLink}
+                                to="/reports"
+                                exact
+                                activeClassName="router-link-exact-active"
+                            >
                             <Button icon={<Analytics color="#ffffff"/>} style={{fontSize: '1.75em'}}/>
+                            </NavLink>
                         </NavIcon>
                         <NavText>
 
@@ -122,7 +156,14 @@ const CustomSideBar = () => {
                 {!isAuthenticated && (
                     <NavItem onClick={() => loginWithRedirect({})}>
                         <NavIcon>
+                            <NavLink
+                                tag={RouterNavLink}
+                                to="/"
+                                exact
+                                activeClassName="router-link-exact-active"
+                            >
                             <Button icon={<User color="#ffffff"/>} style={{fontSize: '1.75em'}} href={'/'}/>
+                            </NavLink>
                         </NavIcon>
                         <NavText>
                             Login
