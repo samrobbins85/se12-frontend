@@ -380,6 +380,10 @@ class Designer extends Component {
                                         </li>
                                         <li>Zone names can also be modified, as can bay names and their inner structure.
                                         </li>
+                                        <li>Bays can be deleted from zones, but all zones must have one bay minimum at
+                                            all times. Attempting to delete a bay from a zone with one bay will not
+                                            work.
+                                        </li>
 
                                     </Container>
                                 </Jumbotron>
