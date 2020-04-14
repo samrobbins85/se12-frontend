@@ -371,20 +371,14 @@ class Designer extends Component {
                                     <Container>
                                         <h1>Warehouse Designer</h1>
 
-                                        <li>We will have a list of zones, that will collapse into an accordion component
-                                            (search grommet accordion to see what i mean)
+                                        <li>Below are all the zones in the warehouse.
                                         </li>
-                                        <li>further accordions will expand to show the bays, each bay will have a gear
-                                            icon
+                                        <li>By clicking on a zone, you are able to view the bays contained in each zone.
                                         </li>
-                                        <li>the gear icon will yield a pop out (not sure which react framework will
-                                            support this.)
+                                        <li>New zones, and new bays within zones, can be added provided that they do
+                                            not have the same name as an existing zone or bay respectively.
                                         </li>
-                                        <li>the pop out will allow user to increase the dimensions of the bay or
-                                            decrease them if no bays will be lost.
-                                        </li>
-                                        <li>the popout we see here will be the same component visible in the gear icon
-                                            in the stocktake component.
+                                        <li>Zone names can also be modified, as can bay names and their inner structure.
                                         </li>
 
                                     </Container>
